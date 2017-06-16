@@ -6,6 +6,7 @@
 #pragma once
 
 #include <Core/ecs/Component.hpp>
+#include <Core/Config.hpp>
 
 namespace con
 {
@@ -28,8 +29,11 @@ namespace con
 		// Called every frame.
 		virtual void Update() {}
 
-		virtual void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) 
-		{ (void)first; (void)second; (void)side; }
-		// TODO: Make CON_UNUSED_PARAM( x ) macro that wrapps this code ^
+		virtual void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side )
+		{
+			CON_UNUSED_PARAM( first );
+			CON_UNUSED_PARAM( second );
+			CON_UNUSED_PARAM( side );
+		}
 	};
 }

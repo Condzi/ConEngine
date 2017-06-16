@@ -12,3 +12,6 @@ namespace con
 	typedef int8_t resourcePriorityID_t;
 	typedef int8_t resourceID_t;
 }
+
+// IDEA: Maybe move this macro to Macros.hpp? Along with Assertions.
+#define CON_UNUSED_PARAM( x ) ( ( void )( x ) )

@@ -26,6 +26,7 @@ namespace con
 
 		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
 		{
+			CON_UNUSED_PARAM( first );
 			if ( second.entity->GetComponent<EntityTagComponent>().tag != ENTITY_BALL )
 				return;
 

@@ -16,7 +16,7 @@ namespace con
 
 	===============================================================================
 	*/
-	struct VelocityComponent :
+	struct VelocityComponent final :
 		Component
 	{
 		float x = 0.0f, y = 0.0f;
