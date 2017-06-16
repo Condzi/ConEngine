@@ -28,7 +28,7 @@ namespace con
 		// Called every frame.
 		virtual void Update() {}
 
-		virtual void OnCollision( SimpleColliderComponent* first, SimpleColliderComponent* second, collisionSide_t side ) 
+		virtual void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) 
 		{ (void)first; (void)second; (void)side; }
 		// TODO: Make CON_UNUSED_PARAM( x ) macro that wrapps this code ^
 	};

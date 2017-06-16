@@ -24,35 +24,25 @@ namespace con
 	{
 		sf::Vector2<uint8_t>* points = nullptr;
 
-		void Init() override
+		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
 		{
-			this->setUpColliderCallback();
-		}
+			if ( second.entity->GetComponent<EntityTagComponent>().tag != ENTITY_BALL )
+				return;
 
-	private:
-		void setUpColliderCallback()
-		{
-			this->entity->GetComponent<SimpleColliderComponent>().callback = [this]( SimpleColliderComponent&, SimpleColliderComponent& second, collisionSide_t side )
+			CON_ASSERT( side == COLLISION_SIDE_LEFT || side == COLLISION_SIDE_RIGHT, "wrong collision side with trigger" );
+			CON_ASSERT( this->points, "points pointer is nullptr for unknow reason" );
+
+			if ( side == COLLISION_SIDE_LEFT )
 			{
-				if ( second.entity->GetComponent<EntityTagComponent>().tag != ENTITY_BALL )
-					return;
+				this->points->y++;
+				second.entity->GetComponent<BallScript>().ResetBall( false );
+			} else if ( side == COLLISION_SIDE_RIGHT )
+			{
+				this->points->x++;
+				second.entity->GetComponent<BallScript>().ResetBall( true );
+			}
 
-				CON_ASSERT( side == COLLISION_SIDE_LEFT || side == COLLISION_SIDE_RIGHT, "wrong collision side with trigger" );
-				CON_ASSERT( this->points, "points pointer is nullptr for unknow reason" );
-
-				if ( side == COLLISION_SIDE_LEFT )
-				{
-					this->points->y++;
-					second.entity->GetComponent<BallScript>().ResetBall( false );
-				}
-				else if ( side == COLLISION_SIDE_RIGHT )
-				{
-					this->points->x++;
-					second.entity->GetComponent<BallScript>().ResetBall( true );
-				}
-
-				LOG( "Score! " << +this->points->x << " : " << +this->points->y, INFO, CONSOLE );
-			};
+			LOG( "Score! " << +this->points->x << " : " << +this->points->y, INFO, CONSOLE );
 		}
 	};
 }
