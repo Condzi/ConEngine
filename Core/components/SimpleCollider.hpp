@@ -13,8 +13,8 @@
 
 namespace con
 {
-	//TODO: Make SimpleCollider non-component (it's repleaced by rigidbody)
-	//Intead pointer to Entity (ComponentBase.Entity*) use this->rigidBody->Entity
+	// TODO: Make SimpleCollider non-component (it's repleaced by rigidbody)
+	// Instead pointer to Entity (ComponentBase.Entity*) use this->rigidBody->Entity
 	struct SimpleColliderComponent final :
 		Component
 	{
