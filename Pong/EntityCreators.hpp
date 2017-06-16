@@ -47,12 +47,6 @@ namespace con
 			collider.boundingBox.size.x = drawable.sprite.getGlobalBounds().width;
 			collider.boundingBox.size.y = drawable.sprite.getGlobalBounds().height;
 			collider.lockXaxis = true;
-			collider.callback = []( SimpleColliderComponent& colliderFirst, SimpleColliderComponent& colliderSecond, collisionSide_t side )
-			{
-				LOG( "PADDLE_A collision, side: " << +side, INFO, CONSOLE );
-				colliderFirst.CorrectAfterCollision( colliderSecond.boundingBox, side );
-				colliderFirst.StopInCollisionAxis( side );
-			};
 
 			position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) * 0.05f;
 			position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) * 0.5f - collider.boundingBox.size.y * 0.5f;
@@ -86,14 +80,6 @@ namespace con
 			collider.boundingBox.size.x = drawable.sprite.getGlobalBounds().width;
 			collider.boundingBox.size.y = drawable.sprite.getGlobalBounds().height;
 			collider.lockXaxis = true;
-			collider.callback = []( SimpleColliderComponent& colliderFirst, SimpleColliderComponent& colliderSecond, collisionSide_t side )
-			{
-				LOG( "PADDLE_B collision, side: " << +side, INFO, CONSOLE );
-				if ( colliderSecond.isTrigger )
-					return;
-				colliderFirst.CorrectAfterCollision( colliderSecond.boundingBox, side );
-				colliderFirst.StopInCollisionAxis( side );
-			};
 
 			position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) * 0.95f;
 			position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) * 0.5f - collider.boundingBox.size.y * 0.5f;
@@ -161,20 +147,6 @@ namespace con
 			drawable.sprite.setScale( 5.0f, 5.0f );
 
 			collider.boundingBox.size = { drawable.sprite.getGlobalBounds().width, drawable.sprite.getGlobalBounds().height };
-			collider.callback = []( SimpleColliderComponent& colliderFirst, SimpleColliderComponent& colliderSecond, collisionSide_t side )
-			{
-				LOG( "Ball collision, side: " << +side, INFO, CONSOLE );
-				auto& velocity = colliderFirst.entity->GetComponent<VelocityComponent>();
-				colliderFirst.CorrectAfterCollision( colliderSecond.boundingBox, side );;
-				if ( colliderSecond.entity->HasComponent<VelocityComponent>() )
-					velocity.y += colliderSecond.entity->GetComponent<VelocityComponent>().y * 0.5f;
-
-				// Bouncing 
-				if ( side == COLLISION_SIDE_LEFT || side == COLLISION_SIDE_RIGHT )
-					velocity.x = -velocity.x;
-				if ( side == COLLISION_SIDE_BOTTOM || side == COLLISION_SIDE_TOP )
-					velocity.y = -velocity.y;
-			};
 		}
 	};
 

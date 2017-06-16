@@ -18,7 +18,6 @@ namespace con
 	struct SimpleColliderComponent final :
 		Component
 	{
-		std::function<void( SimpleColliderComponent&, SimpleColliderComponent&, collisionSide_t )> callback;
 		BoundingBox<float> boundingBox;
 		bool isTrigger = false;
 		bool lockXaxis = false, lockYaxis = false;

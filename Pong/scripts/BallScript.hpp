@@ -35,6 +35,21 @@ namespace con
 			}
 		}
 
+		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
+		{
+			LOG( "Ball collision, side: " << +side, INFO, CONSOLE );
+			auto& velocity = first.entity->GetComponent<VelocityComponent>();
+			first.CorrectAfterCollision( second.boundingBox, side );;
+			if ( second.entity->HasComponent<VelocityComponent>() )
+				velocity.y += second.entity->GetComponent<VelocityComponent>().y * 0.5f;
+
+			// Bouncing 
+			if ( side == COLLISION_SIDE_LEFT || side == COLLISION_SIDE_RIGHT )
+				velocity.x = -velocity.x;
+			if ( side == COLLISION_SIDE_BOTTOM || side == COLLISION_SIDE_TOP )
+				velocity.y = -velocity.y;
+		}
+
 		void ResetBall( bool dirLeft )
 		{
 			auto& settings = *this->context->settings;

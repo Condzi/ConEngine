@@ -24,17 +24,9 @@ namespace con
 	{
 		sf::Vector2<uint8_t>* points = nullptr;
 
-		void Init() override
+		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
 		{
-			this->setUpColliderCallback();
-		}
-
-	private:
-		void setUpColliderCallback()
-		{
-			this->entity->GetComponent<SimpleColliderComponent>().callback = [this]( SimpleColliderComponent&, SimpleColliderComponent& second, collisionSide_t side )
-			{
-				if ( second.entity->GetComponent<EntityTagComponent>().tag != ENTITY_BALL )
+			if ( second.entity->GetComponent<EntityTagComponent>().tag != ENTITY_BALL )
 					return;
 
 				CON_ASSERT( side == COLLISION_SIDE_LEFT || side == COLLISION_SIDE_RIGHT, "wrong collision side with trigger" );
@@ -52,7 +44,6 @@ namespace con
 				}
 
 				LOG( "Score! " << +this->points->x << " : " << +this->points->y, INFO, CONSOLE );
-			};
 		}
 	};
 }

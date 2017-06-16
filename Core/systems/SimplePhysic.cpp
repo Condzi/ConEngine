@@ -11,7 +11,7 @@ namespace con
 	{
 		this->timeAccumulator += Time::FRAME_TIME;
 
-		while( this->timeAccumulator > this->ups )
+		while ( this->timeAccumulator > this->ups )
 		{
 			this->updatePhysic();
 			this->timeAccumulator -= Time::FRAME_TIME;
@@ -69,10 +69,10 @@ namespace con
 
 				if ( collisionSide != COLLISION_SIDE_NONE )
 				{
-					if ( packA.collider->callback )
-						packA.collider->callback( *packA.collider, *packB.collider, collisionSide );
-					if ( packB.collider->isTrigger && packB.collider->callback )
-						packB.collider->callback( *packB.collider, *packA.collider, invertCollisionSide( collisionSide ) );
+					if ( packA.entity->HasComponent<ScriptComponent>() )
+						packA.entity->GetComponent<ScriptComponent>().OnCollision( *packA.collider, *packB.collider, collisionSide );
+					if ( packB.entity->HasComponent<ScriptComponent>() )
+						packB.entity->GetComponent<ScriptComponent>().OnCollision( *packB.collider, *packA.collider, invertCollisionSide( collisionSide ) );
 				}
 			}
 		}

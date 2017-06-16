@@ -47,5 +47,11 @@ namespace con
 			else
 				velocity.y = 0;
 		}
+
+		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
+		{
+			first.CorrectAfterCollision( second.boundingBox, side );
+			first.StopInCollisionAxis( side );
+		}
 	};
 }
