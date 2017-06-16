@@ -14,7 +14,7 @@
 
 namespace con
 {
-	struct DrawableTextScript :
+	struct DrawableTextScript final :
 		ScriptComponent
 	{
 		sf::RenderTexture texture;

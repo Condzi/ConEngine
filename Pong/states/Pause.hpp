@@ -26,15 +26,12 @@ namespace con
 
 		void OnPush() override
 		{
-			this->context.entityFactory->AddCreator<UIPauseCreator>();
-
 			this->context.resourceCache->uiTexts.emplace_back( std::make_unique<uiTextResource_t>( RESOURCE_MULTISTATE, TEXT_PAUSE ) );
 			auto& textResource = this->context.resourceCache->uiTexts.back();
 			textResource->setString( "PAUSE" );
 			textResource->setFont( *this->context.resourceCache->GetFont( FONT_DEFAULT ) );
 			textResource->setCharacterSize( 60 );
 
-			// Yeah, confusing.
 			auto& text = this->context.entityFactory->CreateEntity( this->context.entityManager->CreateEntity(), ENTITY_UI_PAUSE_TEXT, this->context );
 			text.GetComponent<DrawableTextScript>().textToDraw = textResource.get();
 			// Center text.
@@ -42,12 +39,20 @@ namespace con
 			// Text height is 1/2 for default for some reason.
 			position.y = position.y - textResource->getGlobalBounds().height;
 			position.x = position.x - textResource->getGlobalBounds().width / 2.0f;
+
+			auto& exitButton = this->context.entityFactory->CreateEntity( this->context.entityManager->CreateEntity(), ENTITY_UI_EXIT_BUTTON, this->context );
+			exitButton.AddGroup( GROUP_PAUSE_STATE );
+			auto& exitButtonPos = exitButton.GetComponent<PositionComponent>();
+			exitButtonPos.x -= exitButton.GetComponent<DrawableComponent>().sprite.getGlobalBounds().width / 2;
 		}
 
 		void OnPop() override
 		{
-			// There'll be always only 'pause' text.
-			this->context.entityManager->GetEntitiesByGroup( GROUP_PAUSE_STATE )[0]->Kill();
+			// IDEA: Maybe just keep track of these entities and deactivate them on pop and activate on push?
+			auto entitiesToKill = this->context.entityManager->GetEntitiesByGroup( GROUP_PAUSE_STATE );
+			for ( auto entity : entitiesToKill )
+				entity->Kill();
+
 			this->context.resourceCache->DeleteAllResourcesByID( TEXT_PAUSE );
 		}
 		void Update() override

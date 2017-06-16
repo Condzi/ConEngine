@@ -65,7 +65,8 @@ namespace con
 		ENTITY_TRIGGER,
 
 		ENTITY_UI_POINTS_TEXT,
-		ENTITY_UI_PAUSE_TEXT
+		ENTITY_UI_PAUSE_TEXT,
+		ENTITY_UI_EXIT_BUTTON
 	};
 
 	enum drawLayer_t : int8_t

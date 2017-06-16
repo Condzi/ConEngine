@@ -19,6 +19,7 @@
 #include <Pong/scripts/PlayerScript.hpp>
 #include <Pong/scripts/BallScript.hpp>
 #include <Pong/scripts/TriggerScript.hpp>
+#include <Pong/scripts/ExitButtonScript.hpp>
 
 namespace con
 {
@@ -186,6 +187,30 @@ namespace con
 			entity.AddComponent<EntityTagComponent>().tag = ENTITY_UI_PAUSE_TEXT;
 			entity.AddScriptComponent<DrawableTextScript>( context );
 			entity.AddGroup( GROUP_PAUSE_STATE );
+		}
+	};
+
+	struct UIExitButtonCreator final :
+		EntityCreator
+	{
+		entityID_t GetID() const override
+		{
+			return ENTITY_UI_EXIT_BUTTON;
+		}
+
+		void CreateEntity( Entity& entity, Context& context )
+		{
+			auto& position = entity.AddComponent<PositionComponent>();
+			position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) / 2.0f;
+			position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) / 1.5f;
+			auto& drawable = entity.AddComponent<DrawableComponent>();
+			entity.AddComponent<EntityTagComponent>().tag = ENTITY_UI_EXIT_BUTTON;
+			entity.AddScriptComponent<ExitButtonScript>( context );
+
+			drawable.drawLayer = LAYER_UI;
+			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_SHEET ) );
+			drawable.sprite.setTextureRect( { 8,0,56,28 } );
+			drawable.sprite.setScale( 5.0f, 5.0f );
 		}
 	};
 }

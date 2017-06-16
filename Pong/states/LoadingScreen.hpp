@@ -11,6 +11,7 @@
 #include <Core/components/Position.hpp>
 
 #include <Pong/Enums.hpp>
+#include <Pong/EntityCreators.hpp>
 
 namespace con
 {
@@ -38,6 +39,7 @@ namespace con
 		{
 			this->loadTextures();
 			this->loadFonts();
+			this->registerEntityCreators();
 
 			this->requestStackPop();
 			if ( this->context.settings->GetBool( "DEBUG", "DEBUG_DATA" ) )
@@ -70,6 +72,19 @@ namespace con
 				cache->fonts.pop_back();
 				CON_ASSERT( false, "Cannot load GiantRobotArmy-Medium.ttf" );
 			}
+		}
+
+		void registerEntityCreators()
+		{
+			auto entityFactory = this->context.entityFactory;
+			entityFactory->AddCreator<PaddleACreator>();
+			entityFactory->AddCreator<PaddleBCreator>();
+			entityFactory->AddCreator<BorderCreator>();
+			entityFactory->AddCreator<TriggerCreator>();
+			entityFactory->AddCreator<BallCreator>();
+			entityFactory->AddCreator<UIPointsCreator>();
+			entityFactory->AddCreator<UIPauseCreator>();
+			entityFactory->AddCreator<UIExitButtonCreator>();
 		}
 	};
 }

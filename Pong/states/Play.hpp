@@ -36,19 +36,11 @@ namespace con
 			auto entityFactory = this->context.entityFactory;
 			auto entityManager = this->context.entityManager;
 			auto settings = this->context.settings;
-			entityFactory->AddCreator<PaddleACreator>();
-			entityFactory->AddCreator<PaddleBCreator>();
-			entityFactory->AddCreator<BorderCreator>();
-			entityFactory->AddCreator<TriggerCreator>();
-			entityFactory->AddCreator<BallCreator>();
-			entityFactory->AddCreator<UIPointsCreator>();
 
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_PADDLE_A, this->context );
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_PADDLE_B, this->context );
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BALL, this->context );
-			// IDEA: Force every entity to have some kind of InitScriptComponent (but don't use ScriptComponent as base!)
-			// With virtual methods: Init() and Destroy() - called when entity is initialized and destroyed. This may avoid
-			// Long methods with code like this \/
+		
 			auto& topBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
 			auto& bottomBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
 			auto& triggerLeft = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_TRIGGER, this->context );;
