@@ -44,8 +44,8 @@ namespace con
 
 		Logger();
 
-		void logToConsole( std::string& message );
-		void logToFile( std::string& message );
+		void logToConsole( std::string message );
+		void logToFile( std::string message );
 
 		static void setTextColor( uint8_t col );
 	};
