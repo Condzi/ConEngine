@@ -44,11 +44,11 @@ namespace con
 	{
 		sf::Vector2<T> position, size;
 
-		BoundingBox( const sf::Vector2<T>& pos = sf::Vector2<T>(), const sf::Vector2<T>& sz = sf::Vector2<T>() ) :
-			position( pos ), size( sz )
+		BoundingBox( sf::Vector2<T> pos = sf::Vector2<T>(), sf::Vector2<T> sz = sf::Vector2<T>() ) :
+			position( std::move( pos ) ), size( std::move( sz ) )
 		{}
-		BoundingBox( const T& x, const T& y, const T& width, const T& height ) :
-			position( x, y ), size( width, height )
+		BoundingBox( T x, T y, T width, T height ) :
+			position( std::move( x ), std::move( y ) ), size( std::move( width ), std::move( height ) )
 		{}
 
 		bool Intersects( const BoundingBox<T>& second, BoundingBox<T>* intersection = nullptr ) const

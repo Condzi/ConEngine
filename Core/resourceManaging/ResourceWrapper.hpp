@@ -25,8 +25,8 @@ namespace con
 		ResourceWrapper() :
 			priority( 0 ), resourceID( 0 )
 		{}
-		ResourceWrapper( const Resource& res ) :
-			Resource( res ),
+		ResourceWrapper( Resource res ) :
+			Resource( std::move( res ) ),
 			priority( 0 ), resourceID( 0 )
 		{}
 		ResourceWrapper( uint8_t prior, uint8_t id ) :
@@ -34,11 +34,11 @@ namespace con
 			resourceID( id )
 		{}
 
-		uint8_t GetResourcePriority()
+		uint8_t GetResourcePriority() const
 		{
 			return this->priority;
 		}
-		uint8_t GetResourceID()
+		uint8_t GetResourceID() const
 		{
 			return this->resourceID;
 		}

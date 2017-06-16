@@ -23,7 +23,7 @@ namespace con
 		Clock() :
 			startTime( std::chrono::steady_clock::now() )
 		{}
-		virtual ~Clock() = default;
+		virtual ~Clock() {}
 
 		Time GetEleapsedTime();
 		Time Restart();

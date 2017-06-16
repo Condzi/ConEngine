@@ -22,9 +22,9 @@ namespace con
 	class BaseException
 	{
 	public:
-		BaseException( const std::string& wFile, const std::string& wFunction, uint32_t wLine, const std::string& wCondition, const std::string& wMessage ) :
-			file( wFile ), function( wFunction ), condition( wCondition ), message( wMessage ),
-			line( wLine )
+		BaseException( std::string wFile, std::string wFunction, uint32_t wLine, std::string wCondition, std::string wMessage ) :
+			file( std::move( wFile ) ), function( std::move( wFunction ) ), condition( std::move( wCondition ) ), message( std::move( wMessage ) ),
+			line( std::move( wLine ) )
 		{}
 		virtual ~BaseException() = default;
 		BaseException operator=( const BaseException& ) = delete;

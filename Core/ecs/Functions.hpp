@@ -54,10 +54,10 @@ namespace con
 	====================
 	*/
 	template <typename... TArgs>
-	inline auto createComponentSignature( const componentID_t first, const TArgs... args )
+	inline auto createComponentSignature( const componentID_t first, TArgs&&... args )
 	{
 		componentBitset_t bitset;
-		std::vector<componentID_t> rest { args... };
+		std::vector<componentID_t> rest { std::forward<TArgs>( args )... };
 
 		bitset[first] = true;
 		for ( auto arg : rest )

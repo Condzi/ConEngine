@@ -23,7 +23,7 @@ namespace con
 	class System
 	{
 	public:
-		System( Context& cont ) :
+		explicit System( Context& cont ) :
 			context( cont )
 		{}
 		virtual ~System() {}

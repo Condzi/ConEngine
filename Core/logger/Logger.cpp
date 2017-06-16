@@ -56,12 +56,12 @@ namespace con
 			Logger::Log( MSG << "Cannot open log file", prefix_t::ERROR );
 	}
 
-	void Logger::logToConsole( const std::string& message )
+	void Logger::logToConsole( std::string& message )
 	{
 		std::cerr << message;
 	}
 
-	void Logger::logToFile( const std::string& message )
+	void Logger::logToFile( std::string& message )
 	{
 		this->outputFile << message;
 		this->outputFile.flush();

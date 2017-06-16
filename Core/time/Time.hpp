@@ -38,11 +38,8 @@ namespace con
 	public:
 		static Time FRAME_TIME;
 
-		Time::Time() :
-			microseconds( 0 )
-		{}
-		Time::Time( const int64_t& microseconds ) :
-			microseconds( microseconds )
+		Time::Time( int64_t microseconds = 0 ) :
+			microseconds( std::move( microseconds ) )
 		{}
 		virtual ~Time() = default;
 
@@ -61,6 +58,6 @@ namespace con
 		// 1 millisecond - 1 000 microseconds
 		int64_t microseconds;
 	};
-;
+	;
 }
 
