@@ -40,7 +40,7 @@ namespace con
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_PADDLE_A, this->context );
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_PADDLE_B, this->context );
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BALL, this->context );
-		
+
 			auto& topBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
 			auto& bottomBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
 			auto& triggerLeft = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_TRIGGER, this->context );;
@@ -67,17 +67,23 @@ namespace con
 			pointsText->setFont( *cache.GetFont( FONT_DEFAULT ) );
 
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_UI_POINTS_TEXT, this->context ).GetComponent<DrawableTextScript>().textToDraw = pointsText.get();
-
+			// IDEA: Maybe move this to separate method?
 			int musicNumber = Random::value( 1, 2 );
+			std::string finalMusicName = "music" + std::to_string( musicNumber ) + ".ogg";
 			// TODO: Add this to future more-elastic default settings class or something like that (music path and volume)
-			this->music.openFromFile( "music" + std::to_string( musicNumber ) + ".ogg" );
-			this->music.setVolume( 30.0f );
-			this->music.play();
+			if ( !this->music.openFromFile( finalMusicName ) )
+				LOG( "Cannot open music file: " << finalMusicName, ERROR, BOTH );
+			else
+			{
+				this->music.setVolume( 30.0f );
+				this->music.play();
+			}
 		}
 
 		void OnPop()
 		{
-			for ( auto entity : this->context.entityManager->GetEntitiesByGroup( GROUP_PLAY_STATE ) )
+			auto entitiesToKill = this->context.entityManager->GetEntitiesByGroup( GROUP_PLAY_STATE );
+			for ( auto entity : entitiesToKill )
 				entity->Kill();
 
 			this->music.stop();
