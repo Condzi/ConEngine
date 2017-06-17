@@ -14,6 +14,13 @@
 
 namespace con
 {
+	/*
+	===============================================================================
+	Created by: Condzi
+		When pushed prints simple debug data. (for now only Average FPS count)
+
+	===============================================================================
+	*/
 	class DebugDataState final :
 		public State
 	{

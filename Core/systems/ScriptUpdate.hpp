@@ -17,7 +17,7 @@ namespace con
 	/*
 	===============================================================================
 	Created by: Condzi
-		Updates every entity with ScriptComponent. 
+		Calls FixedUpdate and Update on every entity with ScriptComponent.
 
 	===============================================================================
 	*/

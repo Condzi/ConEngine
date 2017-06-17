@@ -13,8 +13,14 @@
 
 namespace con
 {
-	// TODO: Make SimpleCollider non-component (it's repleaced by rigidbody)
-	// Instead pointer to Entity (ComponentBase.Entity*) use this->rigidBody->Entity
+	/*
+	===============================================================================
+	Created by: Condzi
+		Component for collision detection. You can lock its X and Y axis, so it 
+		won't move.
+
+	===============================================================================
+	*/
 	struct SimpleColliderComponent final :
 		Component
 	{

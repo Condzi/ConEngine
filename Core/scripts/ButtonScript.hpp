@@ -14,6 +14,14 @@
 
 namespace con
 {
+	/*
+	===============================================================================
+	Created by: Condzi
+		Inherits from ScriptComponent; gives you acces to OnButtonClicked method.
+		Its Update method detects if button is clicked and calls OnButtonClicked.
+
+	===============================================================================
+	*/
 	struct ButtonScript :
 		ScriptComponent
 	{

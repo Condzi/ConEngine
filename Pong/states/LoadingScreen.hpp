@@ -37,9 +37,10 @@ namespace con
 		// Loads and configures everything.
 		void UpdateThread() override
 		{
-			if ( resourcesLoaded )
+			// Thread tries to call UpdateThread multiple times; until StateStack call OnPop and stop this madness.
+			if ( this->resourcesLoaded )
 				return;
-			resourcesLoaded = true;
+			this->resourcesLoaded = true;
 			this->loadTextures();
 			this->loadFonts();
 			this->registerEntityCreators();

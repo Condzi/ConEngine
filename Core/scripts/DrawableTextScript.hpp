@@ -14,6 +14,14 @@
 
 namespace con
 {
+	/*
+	===============================================================================
+	Created by: Condzi
+		Not inheritable. Simple draws given text (set DrawableTextScript::textToDraw
+		pointer to some sf::Text value from resourceCache).
+
+	===============================================================================
+	*/
 	struct DrawableTextScript final :
 		ScriptComponent
 	{

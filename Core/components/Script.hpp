@@ -15,6 +15,16 @@ namespace con
 	struct SimpleColliderComponent;
 	enum collisionSide_t;
 
+	/*
+	===============================================================================
+	Created by: Condzi
+		Interface structure for Scripts. Don't forget to call entity.AddScriptComponent!
+		It has methods: OnKill(), OnSleep(), OnActive(), FixedUpdate() <called every
+		frame>, Update() and OnCollision(first, second, side) <called when collision
+		occur>.
+
+	===============================================================================
+	*/
 	struct ScriptComponent :
 		Component
 	{
