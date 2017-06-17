@@ -3,6 +3,7 @@
 #include <Core/Config.hpp>
 #include <Core/fileManaging/INIparser.hpp>
 #include <Core/FixedArray.hpp>
+#include <Core/Assert.hpp>
 
 namespace con
 {
@@ -34,19 +35,19 @@ namespace con
 	struct settingsCategoryInterface_t
 	{
 		virtual ~settingsCategoryInterface_t() {}
-		virtual bool GetBoolean( std::string section, std::string name, bool* error = nullptr ) = 0;
-		virtual int GetInt( std::string section, std::string name, bool* error = nullptr ) = 0;
-		virtual double GetDouble( std::string section, std::string name, bool* error = nullptr ) = 0;
-		virtual std::string GetString( std::string section, std::string name, bool* error = nullptr ) = 0;
+		virtual bool* GetBoolean( std::string section, std::string name, bool* error = nullptr ) = 0;
+		virtual int* GetInt( std::string section, std::string name, bool* error = nullptr ) = 0;
+		virtual double* GetDouble( std::string section, std::string name, bool* error = nullptr ) = 0;
+		virtual std::string* GetString( std::string section, std::string name, bool* error = nullptr ) = 0;
 
 		virtual void AddBoolean( std::string section, std::string name, bool value ) = 0;
 		virtual void AddInt( std::string section, std::string name, int value ) = 0;
 		virtual void AddDouble( std::string section, std::string name, double value ) = 0;
 		virtual void AddString( std::string section, std::string name, std::string value ) = 0;
 
-		virtual void Load( std::string path ) = 0;
+		virtual void Load( std::string path, bool* error ) = 0;
 		virtual void Save( std::string path ) = 0;
-		virtual settingsCategoryInterface_t& GetDefault() = 0;
+		virtual bool Compare( settingsCategoryInterface_t* second ) = 0;
 	};
 
 	struct settingsCategory_t final :
@@ -63,39 +64,56 @@ namespace con
 			container( *settingsContainer )
 		{}
 
-		bool GetBoolean( std::string section, std::string name, bool* error = nullptr ) override;
-		int GetInt( std::string section, std::string name, bool* error = nullptr ) override;
-		double GetDouble( std::string section, std::string name, bool* error = nullptr ) override;
-		std::string GetString( std::string section, std::string name, bool* error = nullptr ) override;
+		bool* GetBoolean( std::string section, std::string name, bool* error = nullptr ) override;
+		int* GetInt( std::string section, std::string name, bool* error = nullptr ) override;
+		double* GetDouble( std::string section, std::string name, bool* error = nullptr ) override;
+		std::string* GetString( std::string section, std::string name, bool* error = nullptr ) override;
 
 		void AddBoolean( std::string section, std::string name, bool value ) override;
 		void AddInt( std::string section, std::string name, int value ) override;
 		void AddDouble( std::string section, std::string name, double value ) override;
 		void AddString( std::string section, std::string name, std::string value ) override;
 
-		void Load( std::string path ) override;
+		void Load( std::string path, bool* error = nullptr ) override;
 		void Save( std::string path ) override;
-		settingsCategoryInterface_t& GetDefault() override;
+		bool Compare( settingsCategoryInterface_t* second ) override;
+
+	private:
+		template< typename T>
+		size_t findSection( std::string name, std::vector<std::pair<std::string, T>>& vec, bool* error = nullptr )
+		{
+			for ( size_t i = 0; i < vec.size(); i++ )
+				if ( vec[i].first == name )
+					return i;
+
+			if ( error )
+				*error = true;
+			return 0;
+		}
+		template< typename T>
+		size_t findValue( std::string name, std::vector<std::pair<std::string, T>>& vec, bool* error = nullptr )
+		{
+			// Algorighm is basicly the same.
+			return this->findSection( name, vec, error );
+		}
+
+		std::vector<std::string> loadFromFile( std::string& path, bool* error  );
+		void parse( bool* error );
+		std::vector<std::string> serialize();
+		void saveToFile( std::string& path );
 	};
 
 	class SettingsContainer
 	{
 	public:
-		settingsCategoryInterface_t& GetSettings( settings_t id ) const
-		{
-			return *this->settings[id];
-		}
-		void LoadSettings( settings_t id )
-		{
-			this->settings[id] = std::make_unique<settingsCategory_t>( this );
-			
-			auto filename = internal::getSettingsFilename( id );
-			CON_ASSERT( filename, "invalid settings id" );
-			this->settings[id]->Load( filename );
-		}
+		settingsCategoryInterface_t* GetSettings( settings_t id ) const;
+
+		void LoadSettings( settings_t id, bool* error = nullptr );
+		void SaveSettings( settings_t id );
 
 	private:
 		FixedArray<std::unique_ptr<settingsCategoryInterface_t>, 4> settings;
+		std::string getSettingsFilename( settings_t id );
 	};
 	/*
 	===============================================================================
