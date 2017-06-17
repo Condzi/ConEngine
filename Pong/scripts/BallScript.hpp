@@ -8,6 +8,7 @@
 #include <Core/components/Script.hpp>
 #include <Core/components/Position.hpp>
 #include <Core/components/Velocity.hpp>
+#include <Core/components/Drawable.hpp>
 #include <Core/state/State.hpp>
 #include <Core/ecs/Entity.hpp>
 #include <Core/Random.hpp>
@@ -21,6 +22,8 @@ namespace con
 		float maxSpeed = 1000.0f;
 		float startSpeed = 600.0f;
 		float acceleration = 0.5f;
+		Time changeColorTime = asSeconds( 0.6f );
+		Time changeColorAccumulator = 0;
 
 		void Update() override
 		{
@@ -34,6 +37,18 @@ namespace con
 			//	else
 			//		velocity.x -= acceleration;
 			//}
+
+			auto& sprite = this->entity->GetComponent<DrawableComponent>().sprite;
+			auto spriteColor = sprite.getColor();
+			this->changeColorAccumulator += Time::FRAME_TIME;
+			if ( this->changeColorAccumulator >= this->changeColorTime )
+			{
+				this->changeColorAccumulator = 0;
+				spriteColor.r = Random::value( 0, 255 );
+				spriteColor.g = Random::value( 0, 255 );
+				spriteColor.b = Random::value( 0, 255 );
+				sprite.setColor( spriteColor );
+			}
 		}
 
 		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
