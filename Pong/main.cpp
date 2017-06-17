@@ -10,6 +10,7 @@
 #include <Pong/states/LoadingScreen.hpp>
 #include <Pong/states/Pause.hpp>
 #include <Pong/states/Play.hpp>
+#include <Pong/states/Menu.hpp>
 
 using namespace con;
 
@@ -41,6 +42,7 @@ int main()
 			game.RegisterState<LoadingScreenState>( STATE_LOADING_SCREEN );
 			game.RegisterState<PauseState>( STATE_PAUSE );
 			game.RegisterState<PlayState>( STATE_PLAY );
+			game.RegisterState<MenuState>( STATE_MENU );
 
 			game.Run( STATE_LOADING_SCREEN );
 		}

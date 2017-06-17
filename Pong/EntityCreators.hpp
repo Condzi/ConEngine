@@ -20,6 +20,7 @@
 #include <Pong/scripts/BallScript.hpp>
 #include <Pong/scripts/TriggerScript.hpp>
 #include <Pong/scripts/ExitButtonScript.hpp>
+#include <Pong/scripts/PlayButtonScript.hpp>
 
 namespace con
 {
@@ -211,6 +212,52 @@ namespace con
 			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_SHEET ) );
 			drawable.sprite.setTextureRect( { 8,0,56,28 } );
 			drawable.sprite.setScale( 5.0f, 5.0f );
+		}
+	};
+
+	struct UIPlayButtonCreator final :
+		EntityCreator
+	{
+		entityID_t GetID() const override
+		{
+			return ENTITY_UI_PLAY_BUTTON;
+		}
+
+		void CreateEntity( Entity& entity, Context& context ) override
+		{
+			auto& position = entity.AddComponent<PositionComponent>();
+			position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) / 2.0f;
+			position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) / 2.0f;
+			auto& drawable = entity.AddComponent<DrawableComponent>();
+			entity.AddComponent<EntityTagComponent>().tag = ENTITY_UI_PLAY_BUTTON;
+			entity.AddScriptComponent<PlayButtonScript>( context );
+			entity.AddGroup( GROUP_MENU_STATE );
+
+			drawable.drawLayer = LAYER_UI;
+			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_SHEET ) );
+			drawable.sprite.setTextureRect( { 64,0,56,28 } );
+			drawable.sprite.setScale( 5.0f, 5.0f );
+			position.x -= drawable.sprite.getGlobalBounds().width / 2;
+		}
+	};
+
+	struct BackgroundCreator final :
+		EntityCreator
+	{
+		entityID_t GetID() const override
+		{
+			return ENTITY_BACKGROUND;
+		}
+
+		void CreateEntity( Entity& entity, Context& context ) override
+		{
+			auto& drawable = entity.AddComponent<DrawableComponent>();
+			entity.AddComponent<EntityTagComponent>().tag = ENTITY_BACKGROUND;
+			entity.AddGroup( GROUP_PLAY_STATE );
+
+			drawable.drawLayer = LAYER_BACKGROUND;
+			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_BACKGROUND ) );
+			drawable.sprite.setScale( 2, 1 );
 		}
 	};
 }

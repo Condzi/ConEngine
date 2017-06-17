@@ -32,6 +32,7 @@ namespace con
 		Settings* settings = nullptr;
 		sf::Event* event = nullptr;
 		EntityFactory* entityFactory = nullptr;
+		StateStack* stateStack = nullptr;
 		Game* game;
 	};
 

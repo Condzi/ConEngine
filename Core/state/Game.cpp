@@ -26,6 +26,7 @@ namespace con
 		this->configureFromSettings();
 
 		this->stateStack = std::make_unique<StateStack>( this->context );
+		this->context.stateStack = this->stateStack.get();
 		this->addDefaultSystems();
 		this->registerDefaultStates();
 	}

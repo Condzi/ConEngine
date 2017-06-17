@@ -44,6 +44,7 @@ namespace con
 	enum resources_t : resourceID_t
 	{
 		TEXTURE_SHEET = 0,
+		TEXTURE_BACKGROUND,
 		MUSIC,
 		FONT_DEFAULT,
 
@@ -66,7 +67,10 @@ namespace con
 
 		ENTITY_UI_POINTS_TEXT,
 		ENTITY_UI_PAUSE_TEXT,
-		ENTITY_UI_EXIT_BUTTON
+		ENTITY_UI_EXIT_BUTTON,
+		ENTITY_UI_PLAY_BUTTON,
+
+		ENTITY_BACKGROUND
 	};
 
 	enum drawLayer_t : int8_t

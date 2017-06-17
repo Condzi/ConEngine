@@ -13,7 +13,6 @@
 #include <Core/components/Position.hpp>
 
 #include <Pong/Enums.hpp>
-#include <Pong/EntityCreators.hpp>
 
 namespace con
 {
@@ -40,6 +39,7 @@ namespace con
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_PADDLE_A, this->context );
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_PADDLE_B, this->context );
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BALL, this->context );
+			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BACKGROUND, this->context );
 
 			auto& topBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
 			auto& bottomBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
@@ -59,7 +59,6 @@ namespace con
 			triggerLeft.GetComponent<TriggerScript>().points = &this->points;
 			triggerRight.GetComponent<TriggerScript>().points = &this->points;
 
-			// Move it to DrawableText entity.
 			auto& cache = *this->context.resourceCache;
 			cache.uiTexts.emplace_back( std::make_unique<uiTextResource_t>( RESOURCE_MULTISTATE, TEXT_POINTS ) );
 			auto& pointsText = cache.uiTexts.back();
@@ -67,7 +66,6 @@ namespace con
 			pointsText->setFont( *cache.GetFont( FONT_DEFAULT ) );
 
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_UI_POINTS_TEXT, this->context ).GetComponent<DrawableTextScript>().textToDraw = pointsText.get();
-			// IDEA: Maybe move this to separate method?
 			int musicNumber = Random::value( 1, 2 );
 			std::string finalMusicName = "music" + std::to_string( musicNumber ) + ".ogg";
 			// TODO: Add this to future more-elastic default settings class or something like that (music path and volume)

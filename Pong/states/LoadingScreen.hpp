@@ -47,7 +47,7 @@ namespace con
 			this->requestStackPop();
 			if ( this->context.settings->GetBool( "DEBUG", "DEBUG_DATA" ) )
 				this->requestStackPush( STATE_DEBUG_DATA );
-			this->requestStackPush( STATE_PLAY );
+			this->requestStackPush( STATE_MENU );
 		}
 
 	private:
@@ -62,6 +62,14 @@ namespace con
 			{
 				cache->textures.pop_back();
 				CON_ASSERT( false, "Cannot load TextureSheet.png" );
+			}
+
+			cache->textures.emplace_back( std::make_unique<textureResource_t>( RESOURCE_MULTISTATE, TEXTURE_BACKGROUND ) );
+			auto& background = cache->textures.back();
+			if ( !background->loadFromFile("Background.png") )
+			{
+				cache->textures.pop_back();
+				LOG( "Cannot load Background.png", ERROR, BOTH );
 			}
 		}
 
@@ -89,6 +97,8 @@ namespace con
 			entityFactory->AddCreator<UIPointsCreator>();
 			entityFactory->AddCreator<UIPauseCreator>();
 			entityFactory->AddCreator<UIExitButtonCreator>();
+			entityFactory->AddCreator<UIPlayButtonCreator>();
+			entityFactory->AddCreator<BackgroundCreator>();
 		}
 	};
 }
