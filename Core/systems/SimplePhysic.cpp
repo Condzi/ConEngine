@@ -11,9 +11,10 @@ namespace con
 	{
 		this->timeAccumulator += Time::FRAME_TIME;
 
+		auto simulators = this->getSimulators();
 		while ( this->timeAccumulator > this->ups )
 		{
-			this->updatePhysic();
+			this->updatePhysic( simulators );
 			this->timeAccumulator -= this->ups;
 		}
 	}
@@ -48,10 +49,8 @@ namespace con
 		}
 	}
 
-	void SimplePhysicSystem::updatePhysic()
+	void SimplePhysicSystem::updatePhysic( std::vector<physicComponentsPack_t>& simulators )
 	{
-		auto simulators = this->getSimulators();
-
 		for ( auto fIt = simulators.begin(); fIt != simulators.end(); fIt++ )
 		{
 			physicComponentsPack_t packA = *fIt;

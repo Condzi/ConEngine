@@ -30,18 +30,9 @@ namespace con
 		};
 
 	public:
-		explicit StateStack( Context& cont ) :
-			context( cont )
-		{}
-
-		template <typename T>
-		void RegisterState( stateID_t id )
+		void SetContext( Context& cont )
 		{
-			CON_STATIC_ASSERT( std::is_base_of_v<State, T>, "Must derive from State class" );
-			this->factories[id] = [&]
-			{
-				return std::make_unique<T>( *this, this->context );
-			};
+			this->context = &cont;
 		}
 
 		template <typename T, typename... TArgs>
@@ -50,7 +41,7 @@ namespace con
 			CON_STATIC_ASSERT( std::is_base_of_v<State, T>, "Must derive from State class" );
 			this->factories[id] = [&]
 			{
-				return std::make_unique<T>( *this, this->context, std::forward<TArgs>( args )... );
+				return std::make_unique<T>( *this, *this->context, std::forward<TArgs>( args )... );
 			};
 		}
 
@@ -78,7 +69,7 @@ namespace con
 		std::vector<std::unique_ptr<State>> stack;
 		std::vector<pendingAction_t> pendingActions;
 		std::unordered_map<stateID_t, std::function<std::unique_ptr<State>()>> factories;
-		Context& context;
+		Context* context = nullptr;
 
 		std::unique_ptr<State> createState( stateID_t id );
 	};

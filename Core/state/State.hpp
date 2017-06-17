@@ -27,7 +27,7 @@ namespace con
 	===============================================================================
 	Created by: Condzi
 		Special structure that gives you acces to core objects: window, entityManager,
-		resourceCache, settings, event, entityFactory, stateStack and game. Most
+		resourceCache, settings, entityFactory, stateStack and game. Most
 		of them requiers to include it's file (e.g resourceCache requiers to use 
 		include <Core/resourceManaging/ResourceHolder.hpp>).
 
@@ -40,7 +40,6 @@ namespace con
 		EntityManager* entityManager = nullptr;
 		ResourceHolder* resourceCache = nullptr;
 		Settings* settings = nullptr;
-		sf::Event* event = nullptr;
 		EntityFactory* entityFactory = nullptr;
 		StateStack* stateStack = nullptr;
 		Game* game;

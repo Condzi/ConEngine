@@ -13,11 +13,12 @@ namespace con
 	{
 		LOG( "Game ctor; application start", INFO, BOTH );
 		this->context.window = &this->window;
-		this->context.resourceCache = &this->resourceCache;
 		this->context.entityManager = &this->entityManager;
+		this->context.resourceCache = &this->resourceCache;
 		this->context.settings = &this->settings;
-		this->context.event = &this->event;
 		this->context.entityFactory = &this->entityFactory;
+		this->context.stateStack = &this->stateStack;
+		this->stateStack.SetContext( this->context );
 
 		if ( !this->settings.LoadFromFile( this->settingsPath ) )
 			this->settings.GenerateDefault( this->settingsPath );
@@ -26,8 +27,6 @@ namespace con
 
 		this->configureFromSettings();
 
-		this->stateStack = std::make_unique<StateStack>( this->context );
-		this->context.stateStack = this->stateStack.get();
 		this->addDefaultSystems();
 		this->registerDefaultStates();
 	}
@@ -75,7 +74,7 @@ namespace con
 		if ( this->GetContext().settings->GetBool( "DEBUG", "DEBUG_DATA" ) )
 		{
 			this->RegisterState<DebugDataState>( DEBUG_DATA_STATE );
-			this->stateStack->Push( DEBUG_DATA_STATE );
+			this->stateStack.Push( DEBUG_DATA_STATE );
 		}
 	}
 

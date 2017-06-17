@@ -13,7 +13,7 @@ namespace con
 	struct ExitButtonScript :
 		ButtonScript
 	{
-		void OnButtonClicked() override
+		void OnButtonClick() override
 		{
 			this->context->game->Exit();
 		}

@@ -17,15 +17,15 @@ namespace con
 	/*
 	===============================================================================
 	Created by: Condzi
-		Inherits from ScriptComponent; gives you acces to OnButtonClicked method.
-		Its Update method detects if button is clicked and calls OnButtonClicked.
+		Inherits from ScriptComponent; gives you acces to OnButtonClick method.
+		Its Update method detects if button is clicked and calls OnButtonClick.
 
 	===============================================================================
 	*/
 	struct ButtonScript :
 		ScriptComponent
 	{
-		virtual void OnButtonClicked() {}
+		virtual void OnButtonClick() {}
 		
 		void Update() override
 		{
@@ -34,7 +34,7 @@ namespace con
 
 			if ( buttonBounds.contains( mousePos.x, mousePos.y ) &&
 				sf::Mouse::isButtonPressed( sf::Mouse::Left ) )
-				this->OnButtonClicked();
+				this->OnButtonClick();
 		}
 	};
 }

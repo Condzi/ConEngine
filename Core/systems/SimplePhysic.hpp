@@ -60,7 +60,7 @@ namespace con
 		Time timeAccumulator;
 		Time ups;
 
-		void updatePhysic();
+		void updatePhysic( std::vector<physicComponentsPack_t>& simulators );
 		physicComponentsPack_t createPhysicComponentPack( Entity* entity );
 		std::vector<physicComponentsPack_t> getSimulators();
 		void updatePositionByVelocity( std::vector<physicComponentsPack_t>& simulators );

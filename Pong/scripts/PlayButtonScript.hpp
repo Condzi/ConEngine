@@ -15,7 +15,7 @@ namespace con
 	struct PlayButtonScript :
 		ButtonScript
 	{
-		void OnButtonClicked() override
+		void OnButtonClick() override
 		{
 			this->context->stateStack->Pop();
 			this->context->stateStack->Push( STATE_PLAY );

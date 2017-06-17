@@ -53,7 +53,7 @@ namespace con
 		template <typename T, typename... TArgs>
 		void RegisterState( stateID_t id, TArgs&&... args )
 		{
-			this->stateStack->RegisterState<T>( id, args... );
+			this->stateStack.RegisterState<T>( id, args... );
 		}
 
 		Context& GetContext() 
@@ -68,12 +68,12 @@ namespace con
 
 		void Run( stateID_t initState )
 		{
-			this->stateStack->Push( initState );
-			this->stateStack->ApplyPendingActions();
+			this->stateStack.Push( initState );
+			this->stateStack.ApplyPendingActions();
 
 			Clock clock;
 
-			while ( !exit && this->stateStack->GetStateOnTop() != EXIT_STATE )
+			while ( !exit && this->stateStack.GetStateOnTop() != EXIT_STATE )
 			{
 				while ( this->window.pollEvent( this->event ) )
 				{
@@ -82,10 +82,10 @@ namespace con
 				}
 				for ( auto& system : this->systems )
 					system->Update();
-				this->stateStack->Update();
+				this->stateStack.Update();
 
 				this->entityManager.Refresh();
-				this->stateStack->ApplyPendingActions();
+				this->stateStack.ApplyPendingActions();
 				Time::FRAME_TIME = clock.Restart();
 			}
 		}
@@ -98,8 +98,7 @@ namespace con
 		sf::Event event;
 		EntityFactory entityFactory;
 		std::vector<std::unique_ptr<System>> systems;
-		// IMPORTANT: Fix me. (Context issue)
-		std::unique_ptr<StateStack> stateStack;
+		StateStack stateStack;
 		Context context;
 		bool exit;
 		const char* settingsPath;
