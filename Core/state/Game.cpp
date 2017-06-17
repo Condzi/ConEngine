@@ -84,11 +84,9 @@ namespace con
 		this->settings.GetInt( "WINDOW", "DESIGNED_Y", &error );
 		this->settings.GetInt( "SOUND", "VOLUME", &error );
 
-		try { CON_ASSERT( error.what.empty(), "One or more errors occured loading basic engine settings, generating default." ); }
-		catch ( BaseException& be )
+		if ( !error.what.empty() )
 		{
-			LOG( "Base Exception (assert) thrown.", ERROR, BOTH );
-			showBasicExceptionData( be );
+			LOG( "One or more errors occured loading basic engine settings, generating default.", WARNING, BOTH );
 			this->settings.GenerateDefault( this->settingsPath );
 			this->configureFromSettings();
 		}
