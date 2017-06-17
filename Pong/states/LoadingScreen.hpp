@@ -45,8 +45,6 @@ namespace con
 			this->registerEntityCreators();
 
 			this->requestStackPop();
-			if ( this->context.settings->GetBool( "DEBUG", "DEBUG_DATA" ) )
-				this->requestStackPush( STATE_DEBUG_DATA );
 			this->requestStackPush( STATE_MENU );
 		}
 

@@ -44,9 +44,9 @@ namespace con
 			if ( this->changeColorAccumulator >= this->changeColorTime )
 			{
 				this->changeColorAccumulator = 0;
-				spriteColor.r = Random::value( 0, 255 );
-				spriteColor.g = Random::value( 0, 255 );
-				spriteColor.b = Random::value( 0, 255 );
+				spriteColor.r = static_cast<sf::Uint8>( Random::value( 0, 255 ) );
+				spriteColor.g = static_cast<sf::Uint8>( Random::value( 0, 255 ) );
+				spriteColor.b = static_cast<sf::Uint8>( Random::value( 0, 255 ) );
 				sprite.setColor( spriteColor );
 			}
 		}

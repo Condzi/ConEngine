@@ -11,6 +11,7 @@ namespace con
 		context( this ),
 		settingsPath( settPath )
 	{
+		LOG( "Game ctor; application start", INFO, BOTH );
 		this->context.window = &this->window;
 		this->context.resourceCache = &this->resourceCache;
 		this->context.entityManager = &this->entityManager;
@@ -72,7 +73,10 @@ namespace con
 	{
 		this->RegisterState<ExitState>( EXIT_STATE );
 		if ( this->GetContext().settings->GetBool( "DEBUG", "DEBUG_DATA" ) )
+		{
 			this->RegisterState<DebugDataState>( DEBUG_DATA_STATE );
+			this->stateStack->Push( DEBUG_DATA_STATE );
+		}
 	}
 
 	void Game::addDefaultSystems()
