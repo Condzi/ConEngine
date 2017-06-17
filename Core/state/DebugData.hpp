@@ -29,7 +29,7 @@ namespace con
 
 		void Update()
 		{
-			this->avgFPS.resize( this->avgFPS.size() + 1,  Time::FRAME_TIME.AsSeconds());
+			this->avgFPS.resize( this->avgFPS.size() + 1, Time::FRAME_TIME.AsSeconds() );
 
 			if ( this->debugUpdateClock.GetEleapsedTime() >= asSeconds( 1.0f ) )
 			{

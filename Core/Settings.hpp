@@ -21,12 +21,12 @@ namespace con
 		{
 			// IDEA: constexpr 3D demensional table with this values?
 			this->AddString( "WINDOW", "TITLE", GAME_NAME );
-			this->AddInt( "WINDOW", "FPS", 64 );
+			this->AddInt( "WINDOW", "FPS", 60 );
 			this->AddInt( "WINDOW", "X", 1280 );
 			this->AddInt( "WINDOW", "Y", 720 );
 			this->AddInt( "WINDOW", "DESIGNED_X", 1920 );
 			this->AddInt( "WINDOW", "DESIGNED_Y", 1080 );
-			this->AddInt( "PHYSIC", "UPS", 30 );
+			this->AddInt( "PHYSIC", "UPS", 120 );
 
 			this->SaveToFile( path, "; Default config. Don't change if you don't know what are you doing!" );
 		}

@@ -21,7 +21,7 @@ namespace con
 		ScriptComponent
 	{
 		sf::Keyboard::Key keyUp = sf::Keyboard::Up, keyDown = sf::Keyboard::Down;
-		float movementForce = 500.0f;
+		float movementForce = 600.0f;
 
 		void Init() override
 		{

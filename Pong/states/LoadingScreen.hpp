@@ -35,8 +35,11 @@ namespace con
 		}
 
 		// Loads and configures everything.
-		void Update() override
+		void UpdateThread() override
 		{
+			if ( resourcesLoaded )
+				return;
+			resourcesLoaded = true;
 			this->loadTextures();
 			this->loadFonts();
 			this->registerEntityCreators();
@@ -45,11 +48,10 @@ namespace con
 			if ( this->context.settings->GetBool( "DEBUG", "DEBUG_DATA" ) )
 				this->requestStackPush( STATE_DEBUG_DATA );
 			this->requestStackPush( STATE_PLAY );
-			// HACK: b2 temporary solution - prevents from time accumulating.
-			Time::FRAME_TIME = 0;
 		}
 
 	private:
+		bool resourcesLoaded = false;
 		void loadTextures()
 		{
 			auto& cache = this->context.resourceCache;

@@ -18,21 +18,22 @@ namespace con
 	struct BallScript :
 		ScriptComponent
 	{
-		float maxSpeed = 800.0f;
-		float startSpeed = 500.0f;
+		float maxSpeed = 1000.0f;
+		float startSpeed = 600.0f;
 		float acceleration = 0.5f;
 
 		void Update() override
 		{
-			auto& velocity = this->entity->GetComponent<VelocityComponent>();
+			// Disabled because caused physic acceleration issues (it should be updated in physic using UPS).
+			//auto& velocity = this->entity->GetComponent<VelocityComponent>();
 
-			if ( std::fabsf( velocity.x ) < maxSpeed )
-			{
-				if ( velocity.x > 0 )
-					velocity.x += acceleration;
-				else
-					velocity.x -= acceleration;
-			}
+			//if ( std::fabsf( velocity.x ) < maxSpeed )
+			//{
+			//	if ( velocity.x > 0 )
+			//		velocity.x += acceleration;
+			//	else
+			//		velocity.x -= acceleration;
+			//}
 		}
 
 		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override

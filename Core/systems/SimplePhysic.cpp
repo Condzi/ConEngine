@@ -14,7 +14,7 @@ namespace con
 		while ( this->timeAccumulator > this->ups )
 		{
 			this->updatePhysic();
-			this->timeAccumulator -= Time::FRAME_TIME;
+			this->timeAccumulator -= this->ups;
 		}
 	}
 
@@ -43,8 +43,8 @@ namespace con
 			if ( !simulator.velocity )
 				continue;
 
-			simulator.position->x += simulator.velocity->x * Time::FRAME_TIME.AsSeconds();
-			simulator.position->y += simulator.velocity->y * Time::FRAME_TIME.AsSeconds();
+			simulator.position->x += simulator.velocity->x * this->ups.AsSeconds();
+			simulator.position->y += simulator.velocity->y * this->ups.AsSeconds();
 		}
 	}
 
@@ -57,7 +57,7 @@ namespace con
 			physicComponentsPack_t packA = *fIt;
 			BoundingBox<float> bbAupdated = packA.collider->boundingBox;
 			if ( packA.velocity )
-				bbAupdated.position = { packA.position->x + packA.velocity->x * Time::FRAME_TIME.AsSeconds(), packA.position->y + packA.velocity->y * Time::FRAME_TIME.AsSeconds() };
+				bbAupdated.position = { packA.position->x + packA.velocity->x * this->ups.AsSeconds(), packA.position->y + packA.velocity->y * this->ups.AsSeconds() };
 
 			for ( auto rIt = simulators.rbegin(); rIt != simulators.rend(); rIt++ )
 			{
