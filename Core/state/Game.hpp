@@ -24,8 +24,6 @@ namespace con
 	*/
 	class Game final
 	{
-		friend struct Context;
-
 	public:
 		Game( const char* settPath );
 		~Game();
@@ -42,8 +40,8 @@ namespace con
 
 		void RemoveSystem( const systemID_t id )
 		{
-			this->systems.erase( 
-				std::remove_if( std::begin( this->systems ), std::end( this->systems ), 
+			this->systems.erase(
+				std::remove_if( std::begin( this->systems ), std::end( this->systems ),
 					[id]( auto& system )
 			{
 				return id == system->GetID();
@@ -56,7 +54,7 @@ namespace con
 			this->stateStack.RegisterState<T>( id, args... );
 		}
 
-		Context& GetContext() 
+		Context& GetContext()
 		{
 			return this->context;
 		}
@@ -66,40 +64,17 @@ namespace con
 			this->exit = true;
 		}
 
-		void Run( stateID_t initState )
-		{
-			this->stateStack.Push( initState );
-			this->stateStack.ApplyPendingActions();
-
-			Clock clock;
-
-			while ( !exit && this->stateStack.GetStateOnTop() != EXIT_STATE )
-			{
-				while ( this->window.pollEvent( this->event ) )
-				{
-					if ( this->event.type == sf::Event::Closed )
-						this->Exit();
-				}
-				for ( auto& system : this->systems )
-					system->Update();
-				this->stateStack.Update();
-
-				this->entityManager.Refresh();
-				this->stateStack.ApplyPendingActions();
-				Time::FRAME_TIME = clock.Restart();
-			}
-		}
+		void Run( stateID_t initState );
 
 	private:
 		sf::RenderWindow window;
-		ResourceHolder resourceCache;
 		EntityManager entityManager;
+		ResourceHolder resourceCache;
 		Settings settings;
-		sf::Event event;
 		EntityFactory entityFactory;
-		std::vector<std::unique_ptr<System>> systems;
 		StateStack stateStack;
 		Context context;
+		std::vector<std::unique_ptr<System>> systems;
 		bool exit;
 		const char* settingsPath;
 

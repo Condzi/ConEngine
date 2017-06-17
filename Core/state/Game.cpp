@@ -39,6 +39,31 @@ namespace con
 		this->resourceCache.DeleteAllResources();
 	}
 
+	void Game::Run( stateID_t initState )
+	{
+		this->stateStack.Push( initState );
+		this->stateStack.ApplyPendingActions();
+
+		Clock clock;
+		sf::Event event;
+
+		while ( !exit && this->stateStack.GetStateOnTop() != EXIT_STATE )
+		{
+			while ( this->window.pollEvent( event ) )
+			{
+				if ( event.type == sf::Event::Closed )
+					this->Exit();
+			}
+			for ( auto& system : this->systems )
+				system->Update();
+			this->stateStack.Update();
+
+			this->entityManager.Refresh();
+			this->stateStack.ApplyPendingActions();
+			Time::FRAME_TIME = clock.Restart();
+		}
+	}
+
 	void Game::configureFromSettings()
 	{
 		INIError_t error;
@@ -50,13 +75,14 @@ namespace con
 			sf::Style::Close | sf::Style::Resize );
 		this->window.setFramerateLimit( this->settings.GetInt( "WINDOW", "FPS", &error ) );
 
+		this->settings.GetInt( "PHYSIC", "UPS", &error );
 		this->settings.GetString( "WINDOW", "TITLE", &error );
 		this->settings.GetInt( "WINDOW", "FPS", &error );
 		this->settings.GetInt( "WINDOW", "X", &error );
 		this->settings.GetInt( "WINDOW", "Y", &error );
 		this->settings.GetInt( "WINDOW", "DESIGNED_X", &error );
 		this->settings.GetInt( "WINDOW", "DESIGNED_Y", &error );
-		this->settings.GetInt( "PHYSIC", "UPS", &error );
+		this->settings.GetInt( "SOUND", "VOLUME", &error );
 
 		try { CON_ASSERT( error.what.empty(), "One or more errors occured loading basic engine settings, generating default." ); }
 		catch ( BaseException& be )
