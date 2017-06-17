@@ -45,6 +45,8 @@ namespace con
 			if ( this->context.settings->GetBool( "DEBUG", "DEBUG_DATA" ) )
 				this->requestStackPush( STATE_DEBUG_DATA );
 			this->requestStackPush( STATE_PLAY );
+			// HACK: b2 temporary solution - prevents from time accumulating.
+			Time::FRAME_TIME = 0;
 		}
 
 	private:

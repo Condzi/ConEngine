@@ -19,7 +19,7 @@ using namespace con;
 	BUGS LIST [b]
 [-]b1. When ball is in trigger and it's position is reseting and paddle is colliding with borders (top / bottom) and 
 	player tries to go into border paddle will stuck into border.
-[-]b2. Sometimes when game starts at the beginning of the Play State there is a physic anomaly - ball is flying in 
+[o]b2. Sometimes when game starts at the beginning of the Play State there is a physic anomaly - ball is flying in 
 	random direction for unknow reason.
 
 	IDEAS LIST [i]
