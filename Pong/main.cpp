@@ -27,7 +27,6 @@ using namespace con;
 */
 int main()
 {
-
 	// Solution for i1: redirect SFML error stream to text file.
 	std::ofstream sfmlOutput( "sfml_output.txt" );
 	sf::err().rdbuf( sfmlOutput.rdbuf() );

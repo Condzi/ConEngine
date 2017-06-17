@@ -75,7 +75,7 @@ namespace con
 				LOG( "Cannot open music file: " << finalMusicName, ERROR, BOTH );
 			else
 			{
-				this->music.setVolume( 30.0f );
+				this->music.setVolume( static_cast<float>( settings->GetInt( "SOUND", "VOLUME" ) ) );
 				this->music.play();
 			}
 		}
