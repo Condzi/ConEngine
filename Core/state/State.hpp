@@ -18,7 +18,7 @@ namespace con
 	// Forward declarations continued.
 	class EntityManager;
 	struct ResourceHolder;
-	class Settings;
+	class Settings_Old;
 	class Game;
 	class EntityFactory;
 	class StateStack;
@@ -29,7 +29,7 @@ namespace con
 		sf::RenderWindow* window = nullptr;
 		EntityManager* entityManager = nullptr;
 		ResourceHolder* resourceCache = nullptr;
-		Settings* settings = nullptr;
+		Settings_Old* settings = nullptr;
 		sf::Event* event = nullptr;
 		EntityFactory* entityFactory = nullptr;
 		Game* game;

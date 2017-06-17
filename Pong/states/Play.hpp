@@ -70,7 +70,7 @@ namespace con
 			// IDEA: Maybe move this to separate method?
 			int musicNumber = Random::value( 1, 2 );
 			std::string finalMusicName = "music" + std::to_string( musicNumber ) + ".ogg";
-			// TODO: Add this to future more-elastic default settings class or something like that (music path and volume)
+			// IMPORTANT: Add volume to future more-elastic default settings class or something like that 
 			if ( !this->music.openFromFile( finalMusicName ) )
 				LOG( "Cannot open music file: " << finalMusicName, ERROR, BOTH );
 			else

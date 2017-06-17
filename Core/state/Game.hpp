@@ -94,7 +94,7 @@ namespace con
 		sf::RenderWindow window;
 		ResourceHolder resourceCache;
 		EntityManager entityManager;
-		Settings settings;
+		Settings_Old settings;
 		sf::Event event;
 		EntityFactory entityFactory;
 		std::vector<std::unique_ptr<System>> systems;
