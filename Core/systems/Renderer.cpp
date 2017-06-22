@@ -1,5 +1,6 @@
 #include <Core/state/State.hpp>
 #include <Core/ecs/EntityManager.hpp>
+#include <Core/Vec2.hpp>
 #include <Core/systems/Renderer.hpp>
 
 namespace con
@@ -51,7 +52,7 @@ namespace con
 
 	void Renderer::updateView()
 	{
-		const sf::Vector2i designed = { this->context.settings->GetInt( "WINDOW", "DESIGNED_X" ), this->context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) };
+		const Vec2i designed = { this->context.settings->GetInt( "WINDOW", "DESIGNED_X" ), this->context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) };
 		this->view = this->context.window->getDefaultView();
 		this->view.reset( { 0.0f,0.0f, (float)designed.x, (float)designed.y } );
 	}

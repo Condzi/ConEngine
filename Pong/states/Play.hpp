@@ -129,6 +129,6 @@ namespace con
 	private:
 		Time pauseTime;
 		sf::Music music;
-		sf::Vector2<uint8_t> points = { 0,0 };
+		Vec2<uint8_t> points = { 0,0 };
 	};
 }

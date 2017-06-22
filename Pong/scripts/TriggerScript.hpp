@@ -23,7 +23,7 @@ namespace con
 	struct TriggerScript final :
 		ScriptComponent
 	{
-		sf::Vector2<uint8_t>* points = nullptr;
+		Vec2<uint8_t>* points = nullptr;
 
 		void OnCollision( SimpleBodyComponent& first, SimpleBodyComponent& second, collisionSide_t side ) override
 		{
