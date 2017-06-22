@@ -11,15 +11,17 @@ namespace con
 	{
 		this->timeAccumulator += Time::FRAME_TIME;
 
-		auto simulators = this->getSimulators();
+		if ( this->timeAccumulator > this->ups )
+			this->setBodies();
+
 		while ( this->timeAccumulator > this->ups )
 		{
-			this->updatePhysic( simulators );
+			this->updatePhysic();
 			this->timeAccumulator -= this->ups;
 		}
 	}
 
-	std::vector<SimplePhysicSystem::physicComponentsPack_t> SimplePhysicSystem::getSimulators()
+	void SimplePhysicSystem::setBodies()
 	{
 		auto entities = this->context.entityManager->GetEntitiesWithSignature( this->signature );
 		entities.erase( std::remove_if( std::begin( entities ), std::end( entities ),
@@ -28,65 +30,55 @@ namespace con
 			return !entity->IsActive() || !entity->IsAlive();
 		} ), std::end( entities ) );
 
-		std::vector<physicComponentsPack_t> sims;
-		sims.reserve( entities.size() );
-
+		this->bodies.clear();
 		for ( auto entity : entities )
-			sims.push_back( this->createPhysicComponentPack( entity ) );
-
-		return sims;
+			this->bodies.push_back( &entity->GetComponent<SimpleBodyComponent>() );
 	}
 
-	void SimplePhysicSystem::updatePositionByVelocity( std::vector<physicComponentsPack_t>& simulators )
+	void SimplePhysicSystem::integrateForces()
 	{
-		for ( auto simulator : simulators )
-		{
-			if ( !simulator.velocity )
-				continue;
-
-			simulator.position->x += simulator.velocity->x * this->ups.AsSeconds();
-			simulator.position->y += simulator.velocity->y * this->ups.AsSeconds();
-		}
+		for ( auto body : this->bodies )
+			if ( body->mass != 0 )
+				body->velocity += ( body->force * body->mass + ( this->GRAVITY * body->gravityScale ) ) * (this->ups.AsSeconds() / 2.0f);
 	}
 
-	void SimplePhysicSystem::updatePhysic( std::vector<physicComponentsPack_t>& simulators )
+	void SimplePhysicSystem::clearForces()
 	{
-		for ( auto fIt = simulators.begin(); fIt != simulators.end(); fIt++ )
-		{
-			physicComponentsPack_t packA = *fIt;
-			BoundingBox<float> bbAupdated = packA.collider->boundingBox;
-			if ( packA.velocity )
-				bbAupdated.position = { packA.position->x + packA.velocity->x * this->ups.AsSeconds(), packA.position->y + packA.velocity->y * this->ups.AsSeconds() };
+		for ( auto body : this->bodies )
+			body->force = Vec2f::Zero;
+	}
 
-			for ( auto rIt = simulators.rbegin(); rIt != simulators.rend(); rIt++ )
+	void SimplePhysicSystem::integrateVelocity()
+	{
+		for ( auto body : this->bodies )
+			if ( body->mass != 0 )
+				body->position += body->velocity * this->ups.AsSeconds();
+	}
+
+	void SimplePhysicSystem::updatePhysic()
+	{
+		this->manifolds.clear();
+		
+		this->integrateForces();
+		this->integrateVelocity();
+
+		for ( auto bodyA : this->bodies )
+			for ( auto bodyB : this->bodies )
 			{
-				if ( fIt->entity == rIt->entity )
+				if ( bodyA == bodyB )
 					continue;
-				physicComponentsPack_t packB = *rIt;
 
-				collisionSide_t collisionSide = testBBcollision( bbAupdated, packB.collider->boundingBox );
-
-				if ( collisionSide != COLLISION_SIDE_NONE )
-				{
-					if ( packA.entity->HasComponent<ScriptComponent>() )
-						packA.entity->GetComponent<ScriptComponent>().OnCollision( *packA.collider, *packB.collider, collisionSide );
-					if ( packB.entity->HasComponent<ScriptComponent>() )
-						packB.entity->GetComponent<ScriptComponent>().OnCollision( *packB.collider, *packA.collider, invertCollisionSide( collisionSide ) );
-				}
+				Manifold manifold( bodyA, bodyB );
+				if ( manifold.Check() )
+					this->manifolds.emplace_back( manifold );
 			}
-		}
-		this->updatePositionByVelocity( simulators );
-	}
 
-	SimplePhysicSystem::physicComponentsPack_t SimplePhysicSystem::createPhysicComponentPack( Entity * entity )
-	{
-		physicComponentsPack_t pack;
-		pack.entity = entity;
-		pack.position = &entity->GetComponent<PositionComponent>();
-		pack.collider = &entity->GetComponent<SimpleColliderComponent>();
-		if ( entity->HasComponent<VelocityComponent>() )
-			pack.velocity = &entity->GetComponent<VelocityComponent>();
+		for ( auto& manifold : this->manifolds )
+			manifold.Initialize();
 
-		return pack;
+		for ( auto& manifold : this->manifolds )
+			manifold.CallCallbacks();
+
+		this->clearForces();
 	}
 }

@@ -7,12 +7,13 @@
 
 #include <Core/components/Script.hpp>
 #include <Core/components/Position.hpp>
-#include <Core/components/Velocity.hpp>
 #include <Core/components/Drawable.hpp>
+#include <Core/components/SimpleBody.hpp>
 #include <Core/state/State.hpp>
 #include <Core/ecs/Entity.hpp>
 #include <Core/Random.hpp>
 #include <Core/Settings.hpp>
+#include <Core/physic/CollisionReaction.hpp>
 
 namespace con
 {
@@ -51,35 +52,35 @@ namespace con
 			}
 		}
 
-		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
+		void OnCollision( SimpleBodyComponent& first, SimpleBodyComponent& second, collisionSide_t side ) override
 		{
 			LOG( "Ball collision, side: " << +side, INFO, CONSOLE );
-			auto& velocity = first.entity->GetComponent<VelocityComponent>();
-			first.CorrectAfterCollision( second.boundingBox, side );;
-			if ( second.entity->HasComponent<VelocityComponent>() )
-				velocity.y += second.entity->GetComponent<VelocityComponent>().y * 0.5f;
+			CollisionReaction::CorrectPositionAfterCollision( first, second, side );
+
+			first.velocity.y += second.velocity.y * 0.5f;
 
 			// Bouncing 
 			if ( side == COLLISION_SIDE_LEFT || side == COLLISION_SIDE_RIGHT )
-				velocity.x = -velocity.x;
+				first.velocity.x = -first.velocity.x;
 			if ( side == COLLISION_SIDE_BOTTOM || side == COLLISION_SIDE_TOP )
-				velocity.y = -velocity.y;
+				first.velocity.y = -first.velocity.y;
 		}
 
 		void ResetBall( bool dirLeft )
 		{
 			auto& settings = *this->context->settings;
 			auto& position = this->entity->GetComponent<PositionComponent>();
-			auto& velocity = this->entity->GetComponent<VelocityComponent>();
+			auto& body = this->entity->GetComponent<SimpleBodyComponent>();
 
 			position.x = static_cast<float>( settings.GetInt( "WINDOW", "DESIGNED_X" ) * 0.5 );
 			position.y = static_cast<float>( settings.GetInt( "WINDOW", "DESIGNED_Y" ) * 0.5 );
+			body.position.Set( position.x, position.y );
 
-			velocity.x = this->startSpeed;
+			body.velocity.x = this->startSpeed;
 			if ( dirLeft )
-				velocity.x = -velocity.x;
+				body.velocity.x = -body.velocity.x;
 
-			velocity.y = Random::value( -startSpeed * 0.5f, startSpeed * 0.5f );
+			body.velocity.y = Random::value( -startSpeed * 0.5f, startSpeed * 0.5f );
 		}
 	};
 }

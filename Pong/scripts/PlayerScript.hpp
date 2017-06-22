@@ -10,8 +10,9 @@
 #include <Core/components/Script.hpp>
 #include <Core/state/State.hpp>
 #include <Core/ecs/Entity.hpp>
-#include <Core/components/Velocity.hpp>
 #include <Core/components/EntityTag.hpp>
+#include <Core/components/SimpleBody.hpp>
+#include <Core/physic/CollisionReaction.hpp>
 
 #include <Pong/Enums.hpp>
 
@@ -39,19 +40,20 @@ namespace con
 			if ( !this->context->window->hasFocus() )
 				return;
 
-			auto& velocity = this->entity->GetComponent<VelocityComponent>();
+			auto& body = this->entity->GetComponent<SimpleBodyComponent>();
+
 			if ( sf::Keyboard::isKeyPressed( keyUp ) )
-				velocity.y = -movementForce;
+				body.velocity.y = -movementForce;
 			else if ( sf::Keyboard::isKeyPressed( keyDown ) )
-				velocity.y = movementForce;
+				body.velocity.y = movementForce;
 			else
-				velocity.y = 0;
+				body.velocity.y = 0;
 		}
 
-		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
+		void OnCollision( SimpleBodyComponent& first, SimpleBodyComponent& second, collisionSide_t side ) override
 		{
-			first.CorrectAfterCollision( second.boundingBox, side );
-			first.StopInCollisionAxis( side );
+			CollisionReaction::CorrectPositionAfterCollision( first, second, side );
+			CollisionReaction::StopInCollisionAxis( first, side );
 		}
 	};
 }

@@ -8,9 +8,8 @@
 #include <Core/ecs/EntityManager.hpp>
 #include <Core/ecs/System.hpp>
 #include <Core/ecs/Functions.hpp>
-#include <Core/components/Position.hpp>
-#include <Core/components/SimpleCollider.hpp>
-#include <Core/components/Velocity.hpp>
+#include <Core/components/SimpleBody.hpp>
+#include <Core/physic/Manifold.hpp>
 // FRAME_TIME
 #include <Core/time/Time.hpp>
 // Context structure.
@@ -29,13 +28,6 @@ namespace con
 	class SimplePhysicSystem final :
 		public System
 	{
-		struct physicComponentsPack_t
-		{
-			Entity* entity = nullptr;
-			PositionComponent* position = nullptr;
-			SimpleColliderComponent* collider = nullptr;
-			VelocityComponent* velocity = nullptr;
-		};
 
 	public:
 		SimplePhysicSystem( Context& cont ) :
@@ -49,20 +41,25 @@ namespace con
 
 		void Init() override
 		{
-			this->signature = createComponentSignature( getComponentTypeID<PositionComponent>(), getComponentTypeID<SimpleColliderComponent>() );
+			this->signature = createComponentSignature( getComponentTypeID<SimpleBodyComponent>() );
 			this->ups = asSeconds( 1.0f / static_cast<uint8_t>( this->context.settings->GetInt( "PHYSIC", "UPS" ) ) );
 		}
 
 		void Update() override;
 
 	private:
+		const Vec2f GRAVITY = Vec2f( 0, 10 );
 		componentBitset_t signature;
+		std::vector<SimpleBodyComponent*> bodies;
+		std::vector<Manifold> manifolds;
+
 		Time timeAccumulator;
 		Time ups;
 
-		void updatePhysic( std::vector<physicComponentsPack_t>& simulators );
-		physicComponentsPack_t createPhysicComponentPack( Entity* entity );
-		std::vector<physicComponentsPack_t> getSimulators();
-		void updatePositionByVelocity( std::vector<physicComponentsPack_t>& simulators );
+		void updatePhysic();
+		void setBodies();
+		void integrateForces();
+		void clearForces();
+		void integrateVelocity();
 	};
 }

@@ -46,15 +46,15 @@ namespace con
 			auto& triggerLeft = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_TRIGGER, this->context );;
 			auto& triggerRight = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_TRIGGER, this->context );;
 
-			topBorder.GetComponent<PositionComponent>().y = -20.0f;
-			topBorder.GetComponent<SimpleColliderComponent>().boundingBox.size = { static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_X" ) ), 20.0f };
-			bottomBorder.GetComponent<PositionComponent>().y = static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_Y" ) );
-			bottomBorder.GetComponent<SimpleColliderComponent>().boundingBox.size = { static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_X" ) ), 20.0f };
+			topBorder.GetComponent<SimpleBodyComponent>().position.y = -20.0f;
+			topBorder.GetComponent<SimpleBodyComponent>().bb.size.Set( static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_X" ) ), 20.0f );
+			bottomBorder.GetComponent<SimpleBodyComponent>().position.y = static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_Y" ) );
+			bottomBorder.GetComponent<SimpleBodyComponent>().bb.size.Set( static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_X" ) ), 20.0f );
 
-			triggerLeft.GetComponent<PositionComponent>().x = -20.0f;
-			triggerLeft.GetComponent<SimpleColliderComponent>().boundingBox.size = { 20.0f, static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_Y" ) ) };
-			triggerRight.GetComponent<PositionComponent>().x = static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_X" ) );
-			triggerRight.GetComponent<SimpleColliderComponent>().boundingBox.size = { 20.0f, static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_Y" ) ) };
+			triggerLeft.GetComponent<SimpleBodyComponent>().position.x = -20.0f;
+			triggerLeft.GetComponent<SimpleBodyComponent>().bb.size.Set( 20.0f, static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_Y" ) ) );
+			triggerRight.GetComponent<SimpleBodyComponent>().position.x = static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_X" ) );
+			triggerRight.GetComponent<SimpleBodyComponent>().bb.size.Set( 20.0f, static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_Y" ) ) );
 
 			triggerLeft.GetComponent<TriggerScript>().points = &this->points;
 			triggerRight.GetComponent<TriggerScript>().points = &this->points;
@@ -113,8 +113,7 @@ namespace con
 				if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
 				{
 					auto realMousePos = this->context.window->mapPixelToCoords( sf::Mouse::getPosition( *this->context.window ) );
-					entityGroup[0]->GetComponent<PositionComponent>().x = realMousePos.x;
-					entityGroup[0]->GetComponent<PositionComponent>().y = realMousePos.y;
+					entityGroup[0]->GetComponent<SimpleBodyComponent>().position.Set(realMousePos.x, realMousePos.y);
 				}
 
 			// Eliminate pause bug.

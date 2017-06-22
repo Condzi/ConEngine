@@ -11,7 +11,7 @@
 #include <Core/components/Drawable.hpp>
 #include <Core/components/Position.hpp>
 #include <Core/components/EntityTag.hpp>
-#include <Core/components/SimpleCollider.hpp>
+#include <Core/components/SimpleBody.hpp>
 #include <Core/state/State.hpp>
 #include <Core/scripts/DrawableTextScript.hpp>
 
@@ -35,24 +35,23 @@ namespace con
 		void CreateEntity( Entity& entity, Context& context ) override
 		{
 			auto& drawable = entity.AddComponent<DrawableComponent>();
-			auto& collider = entity.AddComponent<SimpleColliderComponent>();
-			auto& position = entity.AddComponent<PositionComponent>();
-			entity.AddComponent<VelocityComponent>();
+			auto& body = entity.AddComponent<SimpleBodyComponent>();
+			entity.AddComponent<PositionComponent>();
 			entity.AddComponent<EntityTagComponent>().tag = ENTITY_PADDLE_A;
 			entity.AddScriptComponent<PlayerScript>( context );
 
 			drawable.drawLayer = LAYER_PADDLE;
 			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_SHEET ) );
-			drawable.sprite.setTextureRect( { 4,0,4,32 } );
+			drawable.sprite.setTextureRect( { 0,0,4,32 } );
 			drawable.sprite.setScale( 5.0f, 5.0f );
 
-			collider.boundingBox.size.x = drawable.sprite.getGlobalBounds().width;
-			collider.boundingBox.size.y = drawable.sprite.getGlobalBounds().height;
-			collider.lockXaxis = true;
+			body.bb.size.x = drawable.sprite.getGlobalBounds().width;
+			body.bb.size.y = drawable.sprite.getGlobalBounds().height;
+			body.lockXaxis = true;
 
-			position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) * 0.05f;
-			position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) * 0.5f - collider.boundingBox.size.y * 0.5f;
-
+			body.position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) * 0.05f;
+			body.position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) * 0.5f - body.bb.size.y * 0.5f;
+			body.gravityScale = Vec2f::Zero;
 			entity.AddGroup( GROUP_PLAY_STATE );
 		}
 	};
@@ -68,9 +67,8 @@ namespace con
 		void CreateEntity( Entity& entity, Context& context ) override
 		{
 			auto& drawable = entity.AddComponent<DrawableComponent>();
-			auto& collider = entity.AddComponent<SimpleColliderComponent>();
-			auto& position = entity.AddComponent<PositionComponent>();
-			entity.AddComponent<VelocityComponent>();
+			auto& body = entity.AddComponent<SimpleBodyComponent>();
+			entity.AddComponent<PositionComponent>();
 			entity.AddComponent<EntityTagComponent>().tag = ENTITY_PADDLE_B;
 			entity.AddScriptComponent<PlayerScript>( context );
 
@@ -79,13 +77,14 @@ namespace con
 			drawable.sprite.setTextureRect( { 4,0,4,32 } );
 			drawable.sprite.setScale( 5.0f, 5.0f );
 
-			collider.boundingBox.size.x = drawable.sprite.getGlobalBounds().width;
-			collider.boundingBox.size.y = drawable.sprite.getGlobalBounds().height;
-			collider.lockXaxis = true;
+			body.bb.size.x = drawable.sprite.getGlobalBounds().width;
+			body.bb.size.y = drawable.sprite.getGlobalBounds().height;
+			body.lockXaxis = true;
 
-			position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) * 0.95f;
-			position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) * 0.5f - collider.boundingBox.size.y * 0.5f;
-
+			body.position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) * 0.95f;
+			body.position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) * 0.5f - body.bb.size.y * 0.5f;
+			body.gravityScale = Vec2f::Zero;
+			body.mass = 0.1f;
 			entity.AddGroup( GROUP_PLAY_STATE );
 		}
 	};
@@ -100,7 +99,7 @@ namespace con
 
 		void CreateEntity( Entity& entity, Context& ) override
 		{
-			entity.AddComponent<SimpleColliderComponent>();
+			entity.AddComponent<SimpleBodyComponent>().mass = 0;
 			entity.AddComponent<PositionComponent>();
 			entity.AddComponent<EntityTagComponent>().tag = ENTITY_BORDER;
 			entity.AddGroup( GROUP_PLAY_STATE );
@@ -117,7 +116,7 @@ namespace con
 
 		void CreateEntity( Entity& entity, Context& context ) override
 		{
-			entity.AddComponent<SimpleColliderComponent>().isTrigger = true;
+			entity.AddComponent<SimpleBodyComponent>().mass = 0;
 			entity.AddComponent<PositionComponent>();
 			entity.AddComponent<EntityTagComponent>().tag = ENTITY_TRIGGER;
 			entity.AddScriptComponent<TriggerScript>( context );
@@ -136,8 +135,7 @@ namespace con
 		void CreateEntity( Entity& entity, Context& context ) override
 		{
 			auto& drawable = entity.AddComponent<DrawableComponent>();
-			auto& collider = entity.AddComponent<SimpleColliderComponent>();
-			entity.AddComponent<VelocityComponent>();
+			auto& body = entity.AddComponent<SimpleBodyComponent>();
 			entity.AddComponent<PositionComponent>();
 			entity.AddScriptComponent<BallScript>( context ).ResetBall( Random::value( 0, 1 ) );
 			entity.AddComponent<EntityTagComponent>().tag = ENTITY_BALL;
@@ -148,7 +146,8 @@ namespace con
 			drawable.sprite.setTextureRect( { 8,28,4,4 } );
 			drawable.sprite.setScale( 5.0f, 5.0f );
 
-			collider.boundingBox.size = { drawable.sprite.getGlobalBounds().width, drawable.sprite.getGlobalBounds().height };
+			body.bb.size = { drawable.sprite.getGlobalBounds().width, drawable.sprite.getGlobalBounds().height };
+			body.gravityScale = Vec2f::Zero;
 		}
 	};
 

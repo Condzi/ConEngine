@@ -9,6 +9,7 @@
 #include <Core/components/Script.hpp>
 #include <Core/components/Position.hpp>
 #include <Core/components/EntityTag.hpp>
+#include <Core/components/SimpleBody.hpp>
 #include <Core/state/State.hpp>
 #include <Core/ecs/EntityManager.hpp>
 #include <Core/ecs/Functions.hpp>
@@ -24,7 +25,7 @@ namespace con
 	{
 		sf::Vector2<uint8_t>* points = nullptr;
 
-		void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side ) override
+		void OnCollision( SimpleBodyComponent& first, SimpleBodyComponent& second, collisionSide_t side ) override
 		{
 			CON_UNUSED_PARAM( first );
 			if ( second.entity->GetComponent<EntityTagComponent>().tag != ENTITY_BALL )

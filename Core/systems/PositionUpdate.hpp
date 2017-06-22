@@ -10,7 +10,7 @@
 #include <Core/ecs/EntityManager.hpp>
 #include <Core/components/Position.hpp>
 #include <Core/components/Drawable.hpp>
-#include <Core/components/SimpleCollider.hpp>
+#include <Core/components/SimpleBody.hpp>
 #include <Core/state/State.hpp>
 
 namespace con
@@ -52,19 +52,22 @@ namespace con
 
 			for ( auto entity : entities )
 			{
-				const auto& position = entity->GetComponent<PositionComponent>();
+				auto& position = entity->GetComponent<PositionComponent>();
 				DrawableComponent* drawable = nullptr;
-				SimpleColliderComponent* collider = nullptr;
+				SimpleBodyComponent* body = nullptr;
 
 				if ( entity->HasComponent<DrawableComponent>() )
 					drawable = &entity->GetComponent<DrawableComponent>();
-				if ( entity->HasComponent<SimpleColliderComponent>() )
-					collider = &entity->GetComponent<SimpleColliderComponent>();
+				if ( entity->HasComponent<SimpleBodyComponent>() )
+					body = &entity->GetComponent<SimpleBodyComponent>();
 
+				if ( body )
+				{
+					position.x = body->position.x;
+					position.y = body->position.y;
+				}
 				if ( drawable )
 					drawable->sprite.setPosition( position.x, position.y );
-				if ( collider )
-					collider->boundingBox.position = { position.x, position.y };
 			}
 		}
 

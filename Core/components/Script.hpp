@@ -12,8 +12,8 @@ namespace con
 {
 	// Forward declarations.
 	struct Context;
-	struct SimpleColliderComponent;
-	enum collisionSide_t;
+	struct SimpleBodyComponent;
+	enum collisionSide_t : uint8_t;
 
 	/*
 	===============================================================================
@@ -39,7 +39,7 @@ namespace con
 		// Called every frame.
 		virtual void Update() {}
 
-		virtual void OnCollision( SimpleColliderComponent& first, SimpleColliderComponent& second, collisionSide_t side )
+		virtual void OnCollision( SimpleBodyComponent& first, SimpleBodyComponent& second, collisionSide_t side )
 		{
 			CON_UNUSED_PARAM( first );
 			CON_UNUSED_PARAM( second );
