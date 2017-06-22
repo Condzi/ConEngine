@@ -11,10 +11,26 @@ namespace con
 	{
 		this->timeAccumulator += Time::FRAME_TIME;
 
-		if ( this->timeAccumulator > this->ups )
+		if ( this->timeAccumulator >= this->ups )
+		{
 			this->setBodies();
 
-		while ( this->timeAccumulator > this->ups )
+			this->manifolds.clear();
+			this->integrateForces();
+			this->integrateVelocity();
+			for ( auto bodyA : this->bodies )
+				for ( auto bodyB : this->bodies )
+				{
+					if ( bodyA == bodyB )
+						continue;
+
+					Manifold manifold( bodyA, bodyB );
+					if ( manifold.Check() )
+						this->manifolds.emplace_back( manifold );
+				}
+		}
+
+		while ( this->timeAccumulator >= this->ups )
 		{
 			this->updatePhysic();
 			this->timeAccumulator -= this->ups;
@@ -39,7 +55,7 @@ namespace con
 	{
 		for ( auto body : this->bodies )
 			if ( body->mass != 0 )
-				body->velocity += ( body->force * body->mass + ( this->GRAVITY * body->gravityScale ) ) * (this->ups.AsSeconds() / 2.0f);
+				body->velocity += ( body->force * body->mass + ( this->GRAVITY * body->gravityScale ) ) * this->ups.AsSeconds();
 	}
 
 	void SimplePhysicSystem::clearForces()
@@ -57,21 +73,6 @@ namespace con
 
 	void SimplePhysicSystem::updatePhysic()
 	{
-		this->manifolds.clear();
-		
-		this->integrateForces();
-		this->integrateVelocity();
-
-		for ( auto bodyA : this->bodies )
-			for ( auto bodyB : this->bodies )
-			{
-				if ( bodyA == bodyB )
-					continue;
-
-				Manifold manifold( bodyA, bodyB );
-				if ( manifold.Check() )
-					this->manifolds.emplace_back( manifold );
-			}
 
 		for ( auto& manifold : this->manifolds )
 			manifold.Initialize();

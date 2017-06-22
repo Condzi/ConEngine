@@ -26,7 +26,7 @@ namespace con
 			this->AddInt( "WINDOW", "Y", 720 );
 			this->AddInt( "WINDOW", "DESIGNED_X", 1920 );
 			this->AddInt( "WINDOW", "DESIGNED_Y", 1080 );
-			this->AddInt( "PHYSIC", "UPS", 120 );
+			this->AddInt( "PHYSIC", "UPS", 60 );
 			this->AddInt( "SOUND", "VOLUME", 100 );
 
 			this->SaveToFile( path, "; Default config. Don't change if you don't know what are you doing!" );
