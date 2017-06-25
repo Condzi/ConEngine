@@ -38,7 +38,7 @@ namespace con
 			auto& body = entity.AddComponent<SimpleBodyComponent>();
 			entity.AddComponent<PositionComponent>();
 			entity.AddComponent<EntityTagComponent>().tag = ENTITY_PADDLE_A;
-			entity.AddScriptComponent<PlayerScript>( context );
+			entity.AddScriptComponent<PlayerScriptPong>( context );
 
 			drawable.drawLayer = LAYER_PADDLE;
 			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_SHEET ) );
@@ -70,7 +70,7 @@ namespace con
 			auto& body = entity.AddComponent<SimpleBodyComponent>();
 			entity.AddComponent<PositionComponent>();
 			entity.AddComponent<EntityTagComponent>().tag = ENTITY_PADDLE_B;
-			entity.AddScriptComponent<PlayerScript>( context );
+			entity.AddScriptComponent<PlayerScriptPong>( context );
 
 			drawable.drawLayer = LAYER_PADDLE;
 			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_SHEET ) );
@@ -83,6 +83,39 @@ namespace con
 
 			body.position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) * 0.95f;
 			body.position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) * 0.5f - body.bb.size.y * 0.5f;
+			body.gravityScale = Vec2f::Zero;
+			body.mass = 0.1f;
+			entity.AddGroup( GROUP_PLAY_STATE );
+		}
+	};
+
+	struct PaddleArkanoid :
+		EntityCreator
+	{
+		entityID_t GetID() const override
+		{
+			return ENTITY_PADDLE_ARKANOID;
+		}
+
+		void CreateEntity( Entity& entity, Context& context ) override
+		{
+			auto& drawable = entity.AddComponent<DrawableComponent>();
+			auto& body = entity.AddComponent<SimpleBodyComponent>();
+			entity.AddComponent<PositionComponent>();
+			entity.AddComponent<EntityTagComponent>().tag = ENTITY_PADDLE_ARKANOID;
+			entity.AddScriptComponent<PlayerScriptArkanoid>( context );
+
+			drawable.drawLayer = LAYER_PADDLE;
+			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_SHEET ) );
+			drawable.sprite.setTextureRect( { 12,28,32,4 } );
+			drawable.sprite.setScale( 5.0f, 5.0f );
+
+			body.bb.size.x = drawable.sprite.getGlobalBounds().width;
+			body.bb.size.y = drawable.sprite.getGlobalBounds().height;
+			body.lockYaxis = true;
+
+			body.position.x = context.settings->GetInt( "WINDOW", "DESIGNED_X" ) * 0.5f - body.bb.size.x * 0.5f;
+			body.position.y = context.settings->GetInt( "WINDOW", "DESIGNED_Y" ) * 0.90f;
 			body.gravityScale = Vec2f::Zero;
 			body.mass = 0.1f;
 			entity.AddGroup( GROUP_PLAY_STATE );

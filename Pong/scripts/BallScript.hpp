@@ -57,13 +57,17 @@ namespace con
 			LOG( "Ball collision, side: " << +side, INFO, CONSOLE );
 			CollisionReaction::CorrectPositionAfterCollision( first, second, side );
 
-			first.velocity.y += second.velocity.y * 0.5f;
-
-			// Bouncing 
+			// Bouncing and additional paddle acceleration
 			if ( side == COLLISION_SIDE_LEFT || side == COLLISION_SIDE_RIGHT )
+			{
+				first.velocity.x += second.velocity.x * 0.5f;
 				first.velocity.x = -first.velocity.x;
+			}
 			if ( side == COLLISION_SIDE_BOTTOM || side == COLLISION_SIDE_TOP )
+			{
+				first.velocity.y += second.velocity.y * 0.5f;
 				first.velocity.y = -first.velocity.y;
+			}
 		}
 
 		void ResetBall( bool dirLeft )

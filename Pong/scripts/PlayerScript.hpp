@@ -18,7 +18,7 @@
 
 namespace con
 {
-	struct PlayerScript final :
+	struct PlayerScriptPong final :
 		ScriptComponent
 	{
 		sf::Keyboard::Key keyUp = sf::Keyboard::Up, keyDown = sf::Keyboard::Down;
@@ -48,6 +48,34 @@ namespace con
 				body.velocity.y = movementForce;
 			else
 				body.velocity.y = 0;
+		}
+
+		void OnCollision( SimpleBodyComponent& first, SimpleBodyComponent& second, collisionSide_t side ) override
+		{
+			CollisionReaction::CorrectPositionAfterCollision( first, second, side );
+			CollisionReaction::StopInCollisionAxis( first, side );
+		}
+	};
+
+	struct PlayerScriptArkanoid final :
+		ScriptComponent
+	{
+		sf::Keyboard::Key keyLeft = sf::Keyboard::Left, keyRight = sf::Keyboard::Right;
+		float movementForce = 600.0f;
+
+		void Update() override
+		{
+			if ( !this->context->window->hasFocus() )
+				return;
+
+			auto& body = this->entity->GetComponent<SimpleBodyComponent>();
+
+			if ( sf::Keyboard::isKeyPressed( keyLeft ) )
+				body.velocity.x = -movementForce;
+			else if ( sf::Keyboard::isKeyPressed( keyRight ) )
+				body.velocity.x = movementForce;
+			else
+				body.velocity.x = 0;
 		}
 
 		void OnCollision( SimpleBodyComponent& first, SimpleBodyComponent& second, collisionSide_t side ) override

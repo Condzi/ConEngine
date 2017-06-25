@@ -90,6 +90,7 @@ namespace con
 			auto entityFactory = this->context.entityFactory;
 			entityFactory->AddCreator<PaddleACreator>();
 			entityFactory->AddCreator<PaddleBCreator>();
+			entityFactory->AddCreator<PaddleArkanoid>();
 			entityFactory->AddCreator<BorderCreator>();
 			entityFactory->AddCreator<TriggerCreator>();
 			entityFactory->AddCreator<BallCreator>();
