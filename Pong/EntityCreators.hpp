@@ -21,6 +21,7 @@
 #include <Pong/scripts/TriggerScript.hpp>
 #include <Pong/scripts/ExitButtonScript.hpp>
 #include <Pong/scripts/PlayButtonScript.hpp>
+#include <Pong/scripts/DestructableBlockScript.hpp>
 
 namespace con
 {
@@ -290,6 +291,32 @@ namespace con
 			drawable.drawLayer = LAYER_BACKGROUND;
 			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_BACKGROUND ) );
 			drawable.sprite.setScale( 2, 1 );
+		}
+	};
+
+	struct DestructableBlockCreator final :
+		EntityCreator
+	{
+		entityID_t GetID() const override
+		{
+			return ENTITY_DESTRUCTABLE_BLOCK;
+		}
+
+		void CreateEntity( Entity& entity, Context& context ) override
+		{
+			entity.AddComponent<PositionComponent>();
+			entity.AddComponent<EntityTagComponent>().tag = ENTITY_DESTRUCTABLE_BLOCK;
+			auto& body = entity.AddComponent<SimpleBodyComponent>();
+			entity.AddScriptComponent<DestructableBlockScript>( context );
+			auto& drawable = entity.AddComponent<DrawableComponent>();
+			drawable.drawLayer = LAYER_BLOCKS;
+			// temporary texture of ball streched in x 
+			drawable.sprite.setTexture( *context.resourceCache->GetTexture( TEXTURE_SHEET ) );
+			entity.AddGroup( GROUP_PLAY_STATE );
+			drawable.sprite.setTextureRect( { 8,28,4,4 } );
+			drawable.sprite.setScale( 5.0f * 10, 5.0f );
+			body.bb.size.Set( drawable.sprite.getGlobalBounds().width, drawable.sprite.getGlobalBounds().height );
+			body.mass = 0;
 		}
 	};
 }

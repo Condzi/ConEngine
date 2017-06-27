@@ -5,7 +5,6 @@
 
 #pragma once
 
-
 #include <Core/components/Script.hpp>
 #include <Core/components/Position.hpp>
 #include <Core/components/EntityTag.hpp>

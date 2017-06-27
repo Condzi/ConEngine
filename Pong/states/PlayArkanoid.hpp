@@ -44,8 +44,8 @@ namespace con
 
 			auto& topBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
 			auto& bottomBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
-			auto& leftBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );;
-			auto& rightBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );;
+			auto& leftBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
+			auto& rightBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
 
 			topBorder.GetComponent<SimpleBodyComponent>().position.y = -20.0f;
 			topBorder.GetComponent<SimpleBodyComponent>().bb.size.Set( static_cast<float>( settings->GetInt( "WINDOW", "DESIGNED_X" ) ), 20.0f );
@@ -66,6 +66,10 @@ namespace con
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_UI_POINTS_TEXT, this->context ).GetComponent<DrawableTextScript>().textToDraw = pointsText.get();
 			int musicNumber = Random::value( 1, 2 );
 			std::string finalMusicName = "music" + std::to_string( musicNumber ) + ".ogg";
+			
+			auto& testBlock = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_DESTRUCTABLE_BLOCK, this->context );
+			testBlock.GetComponent<SimpleBodyComponent>().position.Set( 500, 500 );
+
 			// TODO: Add this to future more-elastic default settings class or something like that (music path and volume)
 			if ( !this->music.openFromFile( finalMusicName ) )
 				LOG( "Cannot open music file: " << finalMusicName, ERROR, BOTH );

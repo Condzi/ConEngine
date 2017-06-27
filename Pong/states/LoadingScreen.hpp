@@ -99,6 +99,7 @@ namespace con
 			entityFactory->AddCreator<UIExitButtonCreator>();
 			entityFactory->AddCreator<UIPlayButtonCreator>();
 			entityFactory->AddCreator<BackgroundCreator>();
+			entityFactory->AddCreator<DestructableBlockCreator>();
 		}
 	};
 }
