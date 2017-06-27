@@ -38,8 +38,8 @@ namespace con
 			auto entityManager = this->context.entityManager;
 			auto settings = this->context.settings;
 
-			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_PADDLE_ARKANOID, this->context );
-			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BALL, this->context );
+			auto& paddle = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_PADDLE_ARKANOID, this->context );
+			auto& ball = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BALL, this->context );
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BACKGROUND, this->context );
 
 			auto& topBorder = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_BORDER, this->context );
@@ -66,9 +66,15 @@ namespace con
 			entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_UI_POINTS_TEXT, this->context ).GetComponent<DrawableTextScript>().textToDraw = pointsText.get();
 			int musicNumber = Random::value( 1, 2 );
 			std::string finalMusicName = "music" + std::to_string( musicNumber ) + ".ogg";
-			
-			auto& testBlock = entityFactory->CreateEntity( entityManager->CreateEntity(), ENTITY_DESTRUCTABLE_BLOCK, this->context );
-			testBlock.GetComponent<SimpleBodyComponent>().position.Set( 500, 500 );
+
+			this->generateBlocks();
+			{
+				auto& bodyPaddle = paddle.GetComponent<SimpleBodyComponent>();
+				auto& bodyBall = ball.GetComponent<SimpleBodyComponent>();
+
+				bodyBall.position.Set( bodyPaddle.position.x + bodyPaddle.bb.size.x / 2 - bodyBall.bb.size.x / 2, bodyPaddle.position.y - bodyBall.position.y - 1.0f );
+				bodyBall.velocity.Set( Random::value( -300, 300 ), -600 );
+			}
 
 			// TODO: Add this to future more-elastic default settings class or something like that (music path and volume)
 			if ( !this->music.openFromFile( finalMusicName ) )
@@ -115,7 +121,7 @@ namespace con
 				if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
 				{
 					auto realMousePos = this->context.window->mapPixelToCoords( sf::Mouse::getPosition( *this->context.window ) );
-					entityGroup[0]->GetComponent<SimpleBodyComponent>().position.Set(realMousePos.x, realMousePos.y);
+					entityGroup[0]->GetComponent<SimpleBodyComponent>().position.Set( realMousePos.x, realMousePos.y );
 				}
 
 			// Eliminate pause bug.
@@ -132,5 +138,46 @@ namespace con
 		Time pauseTime;
 		sf::Music music;
 		Vec2<uint8_t> points = { 0,0 };
+
+		void generateBlocks()
+		{
+			Vec2i beginPos( 32, 32 );
+			Vec2i prevPosition;
+			auto& factory = *this->context.entityFactory;
+			float yBlockSize = 0;
+			bool firstBlock = true;
+
+			for ( uint8_t i = 0; i < 12; i++ )
+			{
+				for ( uint8_t j = 0; j < 11; j++ )
+				{
+					auto& block = factory.CreateEntity( this->context.entityManager->CreateEntity(), ENTITY_DESTRUCTABLE_BLOCK, this->context );
+					auto& body = block.GetComponent<SimpleBodyComponent>();
+
+					if ( !yBlockSize )
+						yBlockSize = body.bb.size.y;
+
+
+					if ( prevPosition == Vec2i::Zero )
+						prevPosition = beginPos;
+					if ( firstBlock )
+					{
+						body.position.Set( beginPos.x, prevPosition.y );
+						prevPosition = body.position;
+						firstBlock = false;
+						continue;
+					}
+
+
+					body.position.Set( prevPosition.x + body.bb.size.x + 10.0f, prevPosition.y );
+					prevPosition = body.position;
+				}
+
+				firstBlock = true;
+				prevPosition.x = beginPos.x;
+				prevPosition.y += yBlockSize + 10.0f;
+			}
+
+		}
 	};
 }
