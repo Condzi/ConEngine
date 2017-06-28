@@ -10,12 +10,9 @@
 #include <Core/logger/Logger.hpp>
 #include <Core/Config.hpp>
 
-// Forward declarations.
-class b2World;
-
 namespace con
 {
-	// Forward declarations continued.
+	// Forward declaration.
 	class EntityManager;
 	struct ResourceHolder;
 	class Settings;
@@ -28,14 +25,14 @@ namespace con
 	Created by: Condzi
 		Special structure that gives you acces to core objects: window, entityManager,
 		resourceCache, settings, entityFactory, stateStack and game. Most
-		of them requiers to include it's file (e.g resourceCache requiers to use 
+		of them requiers to include it's file (e.g resourceCache requiers to use
 		include <Core/resourceManaging/ResourceHolder.hpp>).
 
 	===============================================================================
 	*/
 	struct Context final
 	{
-		explicit Context( Game* g );
+		explicit Context( Game* g = nullptr );
 		sf::RenderWindow* window = nullptr;
 		EntityManager* entityManager = nullptr;
 		ResourceHolder* resourceCache = nullptr;
@@ -56,9 +53,9 @@ namespace con
 	class State
 	{
 	public:
-		State( StateStack& stack, Context& cont ) :
+		State( StateStack& stack, Context cont ) :
 			stateStack( stack ),
-			context( cont ),
+			context( std::move( cont ) ),
 			threadRunning( false )
 		{}
 		virtual ~State()
@@ -82,9 +79,9 @@ namespace con
 		virtual void UpdateThread() {};
 
 	protected:
-		Context& context;
+		Context context;
 
-		void requestStackPush( stateID_t id );
+		void requestStackPush( const stateID_t id );
 		void requestStackPop();
 		// You may want to use it to update only when this state is currently active. 
 		// For example: you probably don't want to update game AI, mobs etc. when Pause state is on top.
@@ -110,8 +107,8 @@ namespace con
 		public State
 	{
 	public:
-		ExitState( StateStack& stack, Context& cont ) :
-			State( stack, cont )
+		ExitState( StateStack& stack, Context cont ) :
+			State( stack, std::move( cont ) )
 		{}
 
 		stateID_t GetID() const override

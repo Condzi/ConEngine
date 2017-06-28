@@ -26,22 +26,22 @@ namespace con
 			action_t action;
 			stateID_t state;
 
-			pendingAction_t( action_t act, stateID_t stat = EXIT_STATE );
+			pendingAction_t( const action_t act, const stateID_t stat = EXIT_STATE );
 		};
 
 	public:
-		void SetContext( Context& cont )
+		void SetContext( Context cont )
 		{
-			this->context = &cont;
+			this->context = std::move( cont );
 		}
 
 		template <typename T, typename... TArgs>
-		void RegisterState( stateID_t id, TArgs&&... args )
+		void RegisterState( const stateID_t id, TArgs&&... args )
 		{
 			CON_STATIC_ASSERT( std::is_base_of_v<State, T>, "Must derive from State class" );
 			this->factories[id] = [&]
 			{
-				return std::make_unique<T>( *this, *this->context, std::forward<TArgs>( args )... );
+				return std::make_unique<T>( *this, this->context, std::forward<TArgs>( args )... );
 			};
 		}
 
@@ -52,9 +52,9 @@ namespace con
 		{
 			this->pendingActions.emplace_back( action_t::POP );
 		}
-		void Push( stateID_t id )
+		void Push( const stateID_t id )
 		{
-			this->pendingActions.emplace_back( action_t::PUSH, id );
+			this->pendingActions.emplace_back( action_t::PUSH, std::move( id ) );
 		}
 		// Returns STATE_EXIT if no states on stack.
 		stateID_t GetStateOnTop()
@@ -69,8 +69,8 @@ namespace con
 		std::vector<std::unique_ptr<State>> stack;
 		std::vector<pendingAction_t> pendingActions;
 		std::unordered_map<stateID_t, std::function<std::unique_ptr<State>()>> factories;
-		Context* context = nullptr;
+		Context context;
 
-		std::unique_ptr<State> createState( stateID_t id );
+		std::unique_ptr<State> createState( const stateID_t id );
 	};
 }

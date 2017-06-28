@@ -45,7 +45,7 @@ namespace con
 		Vec2f size;
 
 		BoundingBox( Vec2f pos = Vec2f::Zero, Vec2f sz = Vec2f::Zero ) :
-			position( pos ), size( std::move( sz ) )
+			position( std::move( pos ) ), size( std::move( sz ) )
 		{}
 		BoundingBox( float x, float y, float width, float height ) :
 			position( std::move( x ), std::move( y ) ), size( std::move( width ), std::move( height ) )

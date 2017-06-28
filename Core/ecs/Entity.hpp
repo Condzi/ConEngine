@@ -38,7 +38,6 @@ namespace con
 
 		bool IsAlive() const
 		{
-
 			return this->alive;
 		}
 		void Kill()
@@ -55,15 +54,14 @@ namespace con
 		void SetActive( bool val )
 		{
 			if ( val != this->active )
-			{
 				if ( !val )
 				{
 					if ( this->HasComponent<ScriptComponent>() )
 						this->GetComponent<ScriptComponent>().OnSleep();
-				} else
-					if ( this->HasComponent<ScriptComponent>() )
-						this->GetComponent<ScriptComponent>().OnActive();
-			}
+					else
+						if ( this->HasComponent<ScriptComponent>() )
+							this->GetComponent<ScriptComponent>().OnActive();
+				}
 
 			this->active = val;
 		}

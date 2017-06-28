@@ -30,8 +30,8 @@ namespace con
 			priority( 0 ), resourceID( 0 )
 		{}
 		ResourceWrapper( uint8_t prior, uint8_t id ) :
-			priority( prior ),
-			resourceID( id )
+			priority( std::move( prior ) ),
+			resourceID( std::move( id ) )
 		{}
 
 		uint8_t GetResourcePriority() const
@@ -45,11 +45,11 @@ namespace con
 
 		void SetResourcePriority( uint8_t val )
 		{
-			this->priority = val;
+			this->priority = std::move( val );
 		}
 		void SetResourceID( uint8_t val )
 		{
-			this->resourceID = val;
+			this->resourceID = std::move( val );
 		}
 
 	private:

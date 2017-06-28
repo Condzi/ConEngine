@@ -9,6 +9,7 @@
 
 namespace con
 {
+	// Contains functions that should be called in OnCollision method in Script.
 	namespace CollisionReaction
 	{
 		void CorrectPositionAfterCollision( SimpleBodyComponent& first, const SimpleBodyComponent& second, collisionSide_t side );

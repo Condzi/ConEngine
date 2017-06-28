@@ -9,7 +9,15 @@
 
 namespace con
 {
+	// Forward declaration.
 	struct SimpleBodyComponent;
+	/*
+	===============================================================================
+	Created by: Condzi
+		Class used by PhysicSystem. Contains collision data, collided bodies.
+
+	===============================================================================
+	*/
 	struct Manifold final
 	{
 		SimpleBodyComponent* bodyA;

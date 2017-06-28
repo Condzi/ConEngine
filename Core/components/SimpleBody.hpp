@@ -10,6 +10,15 @@
 
 namespace con
 {
+	/*
+	===============================================================================
+	Created by: Condzi
+		Simple Physical Body. It has bounding box, position, velocity, force,
+		gravityScale, mass (set to 0 to make body static), and flags: lockX and lockY
+		axis.
+
+	===============================================================================
+	*/
 	struct SimpleBodyComponent final :
 		Component
 	{

@@ -7,6 +7,36 @@
 
 namespace con
 {
+	textureResource_t* ResourceHolder::GetTexture( const resourceID_t id ) const
+	{
+		for ( auto& ptr : this->textures )
+			if ( ptr->GetResourceID() == id )
+				return ptr.get();
+
+		LOG( "Cannot find Texture of ID " << +id, ERROR, BOTH );
+		return nullptr;
+	}
+
+	uiTextResource_t* ResourceHolder::GetText( const resourceID_t id ) const
+	{
+		for ( auto& ptr : this->uiTexts )
+			if ( ptr->GetResourceID() == id )
+				return ptr.get();
+
+		LOG( "Cannot find Text of ID " << +id, ERROR, BOTH );
+		return nullptr;
+	}
+
+	fontResource_t* ResourceHolder::GetFont( const resourceID_t id ) const
+	{
+		for ( auto& ptr : this->fonts )
+			if ( ptr->GetResourceID() == id )
+				return ptr.get();
+
+		LOG( "Cannot find Font of ID " << +id, ERROR, BOTH );
+		return nullptr;
+	}
+
 	void ResourceHolder::DeleteAllResources()
 	{
 		LOG( "Starting to delete all resources...", INFO, BOTH );
@@ -19,7 +49,7 @@ namespace con
 		LOG( "All resources deleted!", INFO, BOTH );
 	}
 
-	void ResourceHolder::DeleteAllResourcesByPriority( resourcePriorityID_t priority )
+	void ResourceHolder::DeleteAllResourcesByPriority( const resourcePriorityID_t priority )
 	{
 		LOG( "Starting to delete all resources of priority " << +priority, INFO, BOTH );
 
@@ -91,35 +121,5 @@ namespace con
 		}
 
 		LOG( counter << " resources of ID " << +id << " deleted", INFO, BOTH );
-	}
-
-	textureResource_t* ResourceHolder::GetTexture( const resourceID_t id ) const
-	{
-		for ( auto& ptr : this->textures )
-			if ( ptr->GetResourceID() == id )
-				return ptr.get();
-
-		LOG( "Cannot find Texture of ID " << +id, ERROR, BOTH );
-		return nullptr;
-	}
-
-	uiTextResource_t* ResourceHolder::GetText( const resourceID_t id ) const
-	{
-		for ( auto& ptr : this->uiTexts )
-			if ( ptr->GetResourceID() == id )
-				return ptr.get();
-
-		LOG( "Cannot find Text of ID " << +id, ERROR, BOTH );
-		return nullptr;
-	}
-
-	fontResource_t* ResourceHolder::GetFont( const resourceID_t id ) const
-	{
-		for ( auto& ptr : this->fonts )
-			if ( ptr->GetResourceID() == id )
-				return ptr.get();
-
-		LOG( "Cannot find Font of ID " << +id, ERROR, BOTH );
-		return nullptr;
 	}
 }

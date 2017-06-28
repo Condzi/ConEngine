@@ -17,7 +17,7 @@ namespace con
 
 	===============================================================================
 	*/
-	class Time
+	class Time final
 	{
 		friend bool operator==( const Time& left, const Time& right );
 		friend bool operator!=( const Time& left, const Time& right );
@@ -41,7 +41,6 @@ namespace con
 		Time::Time( int64_t microseconds = 0 ) :
 			microseconds( std::move( microseconds ) )
 		{}
-		virtual ~Time() = default;
 
 		float AsSeconds() const;
 		int32_t AsMilliseconds() const;

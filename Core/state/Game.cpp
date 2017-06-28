@@ -7,18 +7,12 @@
 
 namespace con
 {
-	Game::Game( const char* settPath ) :
-		context( this ),
-		settingsPath( settPath )
+	Game::Game( std::string settPath ) :
+		settingsPath( std::move( settPath ) ),
+		context( this )
 	{
 		LOG( "Game ctor; application start", INFO, BOTH );
-		this->context.window = &this->window;
-		this->context.entityManager = &this->entityManager;
-		this->context.resourceCache = &this->resourceCache;
-		this->context.settings = &this->settings;
-		this->context.entityFactory = &this->entityFactory;
-		this->context.stateStack = &this->stateStack;
-		this->stateStack.SetContext( this->context );
+		this->assignContextPointers();
 
 		if ( !this->settings.LoadFromFile( this->settingsPath ) )
 			this->settings.GenerateDefault( this->settingsPath );
@@ -39,9 +33,9 @@ namespace con
 		this->resourceCache.DeleteAllResources();
 	}
 
-	void Game::Run( stateID_t initState )
+	void Game::Run( const stateID_t initState )
 	{
-		this->stateStack.Push( initState );
+		this->stateStack.Push( std::move( initState ) );
 		this->stateStack.ApplyPendingActions();
 
 		Clock clock;
@@ -64,6 +58,17 @@ namespace con
 		}
 	}
 
+	void Game::assignContextPointers()
+	{
+		this->context.window = &this->window;
+		this->context.entityManager = &this->entityManager;
+		this->context.resourceCache = &this->resourceCache;
+		this->context.settings = &this->settings;
+		this->context.entityFactory = &this->entityFactory;
+		this->context.stateStack = &this->stateStack;
+		this->stateStack.SetContext( this->context );
+	}
+
 	void Game::configureFromSettings()
 	{
 		INIError_t error;
@@ -75,6 +80,7 @@ namespace con
 			sf::Style::Close | sf::Style::Resize );
 		this->window.setFramerateLimit( this->settings.GetInt( "WINDOW", "FPS", &error ) );
 
+		// IDEA: Move later to Settings::CheckAreDefaultInitialized or something.
 		this->settings.GetInt( "PHYSIC", "UPS", &error );
 		this->settings.GetString( "WINDOW", "TITLE", &error );
 		this->settings.GetInt( "WINDOW", "FPS", &error );

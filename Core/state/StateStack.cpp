@@ -43,7 +43,7 @@ namespace con
 			this->stack[i]->Update();
 	}
 
-	std::unique_ptr<State> StateStack::createState( stateID_t id )
+	std::unique_ptr<State> StateStack::createState( const stateID_t id )
 	{
 		auto result = this->factories.find( id );
 		CON_ASSERT( !this->factories.empty() && result != this->factories.end(), "State of id " + std::to_string( +id ) + " isn't registered" );
@@ -51,8 +51,8 @@ namespace con
 		return result->second();
 	}
 
-	StateStack::pendingAction_t::pendingAction_t( action_t act, stateID_t stat ) :
-		action( act ),
-		state( stat )
+	StateStack::pendingAction_t::pendingAction_t( const action_t act, const stateID_t stat ) :
+		action( std::move( act ) ),
+		state( std::move( stat ) )
 	{}
 }

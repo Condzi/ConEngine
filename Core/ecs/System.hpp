@@ -5,13 +5,11 @@
 
 #pragma once
 
+#include <Core/state/State.hpp>
 #include <Core/ecs/Config.hpp>
 
 namespace con
 {
-	// Forward declaration.
-	struct Context;
-
 	/*
 	===============================================================================
 	Created by: Condzi
@@ -23,8 +21,8 @@ namespace con
 	class System
 	{
 	public:
-		explicit System( Context& cont ) :
-			context( cont )
+		explicit System( Context cont ) :
+			context( std::move( cont ) )
 		{}
 		virtual ~System() {}
 
@@ -34,6 +32,6 @@ namespace con
 		virtual void Update() {}
 
 	protected:
-		Context& context;
+		Context context;
 	};
 }

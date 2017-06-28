@@ -25,9 +25,9 @@ namespace con
 		this->thread.join();
 	}
 
-	void State::requestStackPush( stateID_t id )
+	void State::requestStackPush( const stateID_t id )
 	{
-		this->stateStack.Push( id );
+		this->stateStack.Push( std::move( id ) );
 	}
 
 	void State::requestStackPop()

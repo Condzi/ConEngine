@@ -25,8 +25,7 @@ namespace con
 	/*
 	===============================================================================
 	Created by: Condzi
-		Stores Entity Creators. Add Creators in main(), before calling Game::Run.
-		Or in Loading state.
+		Stores Entity Creators. Add Creators in LoadingState, before calling PlayState.
 
 	===============================================================================
 	*/

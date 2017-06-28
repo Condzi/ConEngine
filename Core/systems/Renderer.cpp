@@ -10,11 +10,8 @@ namespace con
 		this->updateView();
 		auto window = this->context.window;
 		window->setView( this->view );
-		auto entities = this->context.entityManager->GetEntitiesWithSignature( this->signature );
-		std::vector<DrawableComponent*> drawables;
-		for ( auto entity : entities )
-			if ( entity->IsActive() && entity->IsAlive() )
-				drawables.push_back( &entity->GetComponent<DrawableComponent>() );
+
+		auto drawables = this->getDrawables();
 
 		window->clear();
 		auto drawLayersInterval = this->getDrawLayersInterval( drawables );
@@ -35,7 +32,20 @@ namespace con
 		window->display();
 	}
 
-	std::pair<int8_t, int8_t> Renderer::getDrawLayersInterval( const std::vector<DrawableComponent*>& drawables )
+	std::vector<DrawableComponent*> Renderer::getDrawables()
+	{
+		auto entities = this->context.entityManager->GetEntitiesWithSignature( this->signature );
+		std::vector<DrawableComponent*> drawables;
+		drawables.reserve( entities.size() );
+
+		for ( auto entity : entities )
+			if ( entity->IsActive() && entity->IsAlive() )
+				drawables.push_back( &entity->GetComponent<DrawableComponent>() );
+
+		return drawables;
+	}
+
+	std::pair<int8_t, int8_t> Renderer::getDrawLayersInterval( const std::vector<DrawableComponent*>& drawables ) const
 	{
 		int8_t min = INT8_MAX, max = INT8_MIN;
 

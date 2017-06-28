@@ -25,8 +25,8 @@ namespace con
 		public System
 	{
 	public:
-		ScriptUpdateSystem( Context& cont ) :
-			System( cont )
+		ScriptUpdateSystem( Context cont ) :
+			System( std::move( cont ) )
 		{}
 
 		systemID_t GetID() const override

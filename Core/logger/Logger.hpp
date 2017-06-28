@@ -32,12 +32,12 @@ namespace con
 		};
 		enum output_t : uint8_t
 		{
-			CONSOLE,
+			CONSOLE = 0,
 			FILE,
 			BOTH
 		};
 
-		static void Log( std::ostream& message, prefix_t prefix = INFO, output_t output = CONSOLE );
+		static void Log( std::ostream& message, const prefix_t prefix = INFO, const output_t output = CONSOLE );
 
 	private:
 		std::ofstream outputFile;
@@ -46,8 +46,6 @@ namespace con
 
 		void logToConsole( std::string message );
 		void logToFile( std::string message );
-
-		static void setTextColor( uint8_t col );
 	};
 }
 

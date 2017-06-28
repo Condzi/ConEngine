@@ -25,7 +25,7 @@ namespace con
 	class Game final
 	{
 	public:
-		Game( const char* settPath );
+		Game( std::string settPath );
 		~Game();
 
 		template <typename T, typename... TArgs>
@@ -49,12 +49,12 @@ namespace con
 		}
 
 		template <typename T, typename... TArgs>
-		void RegisterState( stateID_t id, TArgs&&... args )
+		void RegisterState( const stateID_t id, TArgs&&... args )
 		{
-			this->stateStack.RegisterState<T>( id, args... );
+			this->stateStack.RegisterState<T>( std::move( id ), std::forward<TArgs>( args )... );
 		}
 
-		Context& GetContext()
+		Context GetContext()
 		{
 			return this->context;
 		}
@@ -64,7 +64,7 @@ namespace con
 			this->exit = true;
 		}
 
-		void Run( stateID_t initState );
+		void Run( const stateID_t initState );
 
 	private:
 		sf::RenderWindow window;
@@ -76,8 +76,9 @@ namespace con
 		Context context;
 		std::vector<std::unique_ptr<System>> systems;
 		bool exit;
-		const char* settingsPath;
+		std::string settingsPath;
 
+		void assignContextPointers();
 		void configureFromSettings();
 		void registerDefaultStates();
 		void addDefaultSystems();

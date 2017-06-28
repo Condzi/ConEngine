@@ -30,8 +30,8 @@ namespace con
 	{
 
 	public:
-		SimplePhysicSystem( Context& cont ) :
-			System( cont )
+		SimplePhysicSystem( Context cont ) :
+			System( std::move( cont ) )
 		{}
 
 		systemID_t GetID() const override
@@ -48,7 +48,7 @@ namespace con
 		void Update() override;
 
 	private:
-		const Vec2f GRAVITY = Vec2f( 0, 10 );
+		const Vec2f GRAVITY { 0, 10 };
 		componentBitset_t signature;
 		std::vector<SimpleBodyComponent*> bodies;
 		std::vector<Manifold> manifolds;

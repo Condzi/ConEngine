@@ -24,8 +24,8 @@ namespace con
 		public System
 	{
 	public:
-		Renderer( Context& cont ) :
-			System( cont )
+		Renderer( Context cont ) :
+			System( std::move( cont ) )
 		{}
 
 		void Init() override
@@ -44,7 +44,8 @@ namespace con
 		componentBitset_t signature;
 		sf::View view;
 
-		std::pair<int8_t, int8_t> getDrawLayersInterval( const std::vector<DrawableComponent*>& drawables );
+		std::vector<DrawableComponent*> getDrawables();
+		std::pair<int8_t, int8_t> getDrawLayersInterval( const std::vector<DrawableComponent*>& drawables ) const;
 		// Call when resizing a window.
 		void updateView();
 	};

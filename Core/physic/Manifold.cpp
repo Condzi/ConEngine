@@ -67,8 +67,8 @@ namespace con
 
 	void Manifold::setCollisionSideA()
 	{
-		Vec2f firstPosition = this->bodyA->position;
-		Vec2f secondPosition = this->bodyB->position;
+		const Vec2f& firstPosition = this->bodyA->position;
+		const Vec2f& secondPosition = this->bodyB->position;
 
 		if ( this->intersection.size.x > this->intersection.size.y )
 		{

@@ -12,7 +12,24 @@
 
 namespace con
 {
-	void Logger::Log( std::ostream& message, prefix_t prefix, output_t output )
+	namespace internal
+	{
+		void setConsoleTextColor( const uint8_t col )
+		{
+		#if defined _WIN32
+			HANDLE hStdOut = GetStdHandle( STD_OUTPUT_HANDLE );
+			CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+			if ( GetConsoleScreenBufferInfo( hStdOut, &csbi ) )
+			{
+				WORD wColor = ( csbi.wAttributes & 0xF0 ) + ( col & 0x0F );
+				SetConsoleTextAttribute( hStdOut, wColor );
+			}
+		#endif // _WIN32
+		}
+	}
+
+	void Logger::Log( std::ostream& message, const prefix_t prefix, const output_t output )
 	{
 		static Logger instance;
 		std::stringstream finalMessage;
@@ -38,7 +55,7 @@ namespace con
 
 		if ( output == CONSOLE || output == BOTH )
 		{
-			Logger::setTextColor( prefix );
+			internal::setConsoleTextColor( prefix );
 			instance.logToConsole( finalMessage.str() );
 		}
 		if ( output == FILE || output == BOTH )
@@ -53,7 +70,7 @@ namespace con
 
 		this->outputFile.open( "output.txt" );
 		if ( !this->outputFile.is_open() )
-			Logger::Log( MSG << "Cannot open log file", prefix_t::ERROR );
+			LOG( "Cannot open log file", ERROR, CONSOLE );
 	}
 
 	void Logger::logToConsole( std::string message )
@@ -65,19 +82,5 @@ namespace con
 	{
 		this->outputFile << message;
 		this->outputFile.flush();
-	}
-
-	void Logger::setTextColor( uint8_t col )
-	{
-	#if defined _WIN32
-		HANDLE hStdOut = GetStdHandle( STD_OUTPUT_HANDLE );
-		CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-		if ( GetConsoleScreenBufferInfo( hStdOut, &csbi ) )
-		{
-			WORD wColor = ( csbi.wAttributes & 0xF0 ) + ( col & 0x0F );
-			SetConsoleTextAttribute( hStdOut, wColor );
-		}
-	#endif // _WIN32
 	}
 }

@@ -18,8 +18,8 @@ namespace con
 	/*
 	===============================================================================
 	Created by: Condzi
-		Sets position of SimpleColliderComponent and DrawableComponent to match
-		PositionComponent.
+		Sets position of PositionComponent and DrawableComponent to match
+		SimpleBody position.
 
 	===============================================================================
 	*/
@@ -27,8 +27,8 @@ namespace con
 		public System
 	{
 	public:
-		PositionUpdateSystem( Context& cont ) :
-			System( cont )
+		PositionUpdateSystem( Context cont ) :
+			System( std::move( cont ) )
 		{}
 
 		systemID_t GetID() const override
@@ -52,7 +52,7 @@ namespace con
 
 			for ( auto entity : entities )
 			{
-				auto& position = entity->GetComponent<PositionComponent>();
+				PositionComponent* position = &entity->GetComponent<PositionComponent>();
 				DrawableComponent* drawable = nullptr;
 				SimpleBodyComponent* body = nullptr;
 
@@ -63,11 +63,11 @@ namespace con
 
 				if ( body )
 				{
-					position.x = body->position.x;
-					position.y = body->position.y;
+					position->x = body->position.x;
+					position->y = body->position.y;
 				}
 				if ( drawable )
-					drawable->sprite.setPosition( position.x, position.y );
+					drawable->sprite.setPosition( position->x, position->y );
 			}
 		}
 
