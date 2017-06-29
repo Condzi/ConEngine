@@ -19,6 +19,7 @@ namespace con
 	class Game;
 	class EntityFactory;
 	class StateStack;
+	class Messenger;
 
 	/*
 	===============================================================================
@@ -39,6 +40,7 @@ namespace con
 		Settings* settings = nullptr;
 		EntityFactory* entityFactory = nullptr;
 		StateStack* stateStack = nullptr;
+		Messenger* messenger = nullptr;
 		Game* game;
 	};
 

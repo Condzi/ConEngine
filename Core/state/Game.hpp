@@ -11,6 +11,7 @@
 #include <Core/ecs/EntityManager.hpp>
 #include <Core/ecs/System.hpp>
 #include <Core/ecs/EntityFactory.hpp>
+#include <Core/ecs/Messaging.hpp>
 
 namespace con
 {
@@ -54,7 +55,7 @@ namespace con
 			this->stateStack.RegisterState<T>( std::move( id ), std::forward<TArgs>( args )... );
 		}
 
-		Context GetContext()
+		Context GetContext() const
 		{
 			return this->context;
 		}
@@ -73,6 +74,7 @@ namespace con
 		Settings settings;
 		EntityFactory entityFactory;
 		StateStack stateStack;
+		Messenger messenger;
 		Context context;
 		std::vector<std::unique_ptr<System>> systems;
 		bool exit;

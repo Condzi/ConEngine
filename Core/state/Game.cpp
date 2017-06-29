@@ -51,6 +51,7 @@ namespace con
 			for ( auto& system : this->systems )
 				system->Update();
 			this->stateStack.Update();
+			this->messenger.ClearMessages();
 
 			this->entityManager.Refresh();
 			this->stateStack.ApplyPendingActions();
@@ -66,6 +67,7 @@ namespace con
 		this->context.settings = &this->settings;
 		this->context.entityFactory = &this->entityFactory;
 		this->context.stateStack = &this->stateStack;
+		this->context.messenger = &this->messenger;
 		this->stateStack.SetContext( this->context );
 	}
 
